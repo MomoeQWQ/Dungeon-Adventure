@@ -9,11 +9,11 @@ public:
 		: m_capacity{ capacity }
 	{
 		assert(capacity > 0 && "Incorrect DynamicArray Size");//In case minus or zero input
-		arrayptr = new T[m_capacity];
+		m_arrayptr = new T[m_capacity];
 	}
 
 	~DynamicArray() {
-		delete[] arrayptr;
+		delete[] m_arrayptr;
 	}
 
 	//copy constructor
@@ -36,33 +36,34 @@ public:
 	//operator[] overloading
 	T& operator[](int index) {
 		assert(index >= 0 && index < m_size && "invalid array index input");
-		return arrayptr[index];
+		return m_arrayptr[index];
 	}
 
 	//const version of operator[]
 	const T& operator[](int index) const {
 		assert(index >= 0 && index < m_size && "invalid array index input");
-		return arrayptr[index];
+		return m_arrayptr[index];
 	}
 
 	//get size 
 	int getSize() const{
 		return m_size;
 	}
-
+	
+	//push and pop
 	void push_back(const T&);
 	T pop_back();
 
-	//only for test
+	//print, make it easier test
 	void print() const{
 		for (int i{ 0 };i < m_size;i++) {
-			std::cout << arrayptr[i] << "\t";
+			std::cout << m_arrayptr[i] << "\t";
 		}
 		std::cout << std::endl;
 	}
 
 private:
-	T* arrayptr{};
+	T* m_arrayptr{};
 	int m_size{};
 	int m_capacity{};
 	void expansion();//Helper function expasion(update memory size)
@@ -72,31 +73,32 @@ private:
 //Implement Helper function of copy constructor
 template <typename T>
 void DynamicArray<T>::deepCopy(const DynamicArray& source) {
-	delete[] arrayptr;//safe to delete nullptr if constructed by default
+	assert(m_size <= m_capacity);
+	delete[] m_arrayptr;//safe to delete nullptr if constructed by default
 	m_size = source.m_size;
 	m_capacity = source.m_capacity;
-	if (source.arrayptr) //non-null source array pointer
+	if (source.m_arrayptr) //non-null source array pointer
 	{
-		arrayptr = new T[m_capacity];
+		m_arrayptr = new T[m_capacity];
 		
 		//copy
 		for (int i{ 0 };i < m_size;i++)
-			arrayptr[i] = source.arrayptr[i];
+			m_arrayptr[i] = source.m_arrayptr[i];
 	}
 	else
-		arrayptr = nullptr;
+		m_arrayptr = nullptr;
 }
 
-//Implement expansion
+//Implement helper function expansion
 template <typename T>
 void DynamicArray<T>::expansion() {
 	T* temp_ptr{ new T[m_capacity * 2] };//step1. allocate a larger memory
 	for (int i{ 0 };i < m_size;i++)
 	{
-		temp_ptr[i] = arrayptr[i];
+		temp_ptr[i] = m_arrayptr[i];
 	}//step2. copy initial data
-	delete[] arrayptr;//step3. release old memory
-	arrayptr = temp_ptr;
+	delete[] m_arrayptr;//step3. release old memory
+	m_arrayptr = temp_ptr;
 	m_capacity *= 2;//step4. re-bind arrayptr,update parameters
 }
 
@@ -105,7 +107,7 @@ template <typename T>
 void DynamicArray<T>::push_back(const T& value) {
 	if (m_size == m_capacity)
 		expansion();
-	arrayptr[m_size] = value;
+	m_arrayptr[m_size] = value;
 	m_size++;
 }
 
