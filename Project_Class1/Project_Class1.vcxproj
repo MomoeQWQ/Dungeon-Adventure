@@ -154,6 +154,7 @@
     </ClCompile>
     <ClCompile Include="Game\Input.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Render\Camera.cpp" />
     <ClCompile Include="Render\Renderer.cpp" />
     <ClCompile Include="Render\TextureManager.cpp" />
   </ItemGroup>
@@ -164,6 +165,7 @@
     <ClInclude Include="Entities\Player.h" />
     <ClInclude Include="GamesEngineeringBase.h" />
     <ClInclude Include="Game\Input.h" />
+    <ClInclude Include="Render\Camera.h" />
     <ClInclude Include="Render\Renderer.h" />
     <ClInclude Include="Render\TextureManager.h" />
   </ItemGroup>
