@@ -3,6 +3,7 @@
 #include "Game/Input.h"
 #include "Core/Vec2.h"
 #include "Render/Renderer.h"
+#include "Render/TextureManager.h"
 #include <iostream>
 
 int main()
@@ -13,11 +14,27 @@ int main()
 	Renderer renderer{ canvas };
 	GamesEngineeringBase::Timer timer;
 	Vec2 position{0.0f,0.0f};
-	GamesEngineeringBase::Image image;
 
 	canvas.create(1024, 768, "Example");
-	image.load("Resources/A.png");
 	constexpr float MOVE_SPEED = 300;
+
+	//test for texture manager
+	TextureManager tm;
+	tm.load("player", "Resources/A.png");
+	const GamesEngineeringBase::Image* ptr1 = tm.get("player");
+	const GamesEngineeringBase::Image* ptr1_5 = tm.load("player", "Resources/A.png");//test if loaded only once
+	const GamesEngineeringBase::Image* ptr2 = tm.get("player");
+	if (ptr1 == ptr2)
+		std::cout << "same ptr!"<< std::endl;
+	if (ptr1 == ptr1_5)
+		std::cout << "same ptr!" << std::endl;
+
+	const GamesEngineeringBase::Image* ptr3 = tm.get("enemy");
+	std::cout << ptr3 << std::endl;
+
+	tm.load("bad", "Resources/nope.png");
+	const GamesEngineeringBase::Image* ptr4 = tm.get("bad");
+	std::cout << ptr4 << std::endl;
 
 	// main loop of the game
 	while (running) 
@@ -55,7 +72,7 @@ int main()
 
 		position += unit * dt * MOVE_SPEED;
 		
-		renderer.drawImage(image,static_cast<int>(position.x), static_cast<int>(position.y));
+		renderer.drawImage(*ptr1,static_cast<int>(position.x), static_cast<int>(position.y));
 
 		renderer.present();
 	}

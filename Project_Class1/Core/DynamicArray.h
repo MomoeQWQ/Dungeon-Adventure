@@ -5,7 +5,7 @@
 template <typename T>
 class DynamicArray {
 public:
-	explicit DynamicArray(int capacity)
+	explicit DynamicArray(int capacity = 8)//default capacity is 8
 		: m_capacity{ capacity }
 	{
 		assert(capacity > 0 && "Incorrect DynamicArray Size");//In case minus or zero input
