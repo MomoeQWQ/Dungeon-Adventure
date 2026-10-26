@@ -2,6 +2,7 @@
 #include "./Core/DynamicArray.h"
 #include "Game/Input.h"
 #include "Core/Vec2.h"
+#include "Render/Renderer.h"
 #include <iostream>
 
 int main()
@@ -9,11 +10,14 @@ int main()
 	bool running{ true };
 	Input input{};
 	GamesEngineeringBase::Window canvas;
+	Renderer renderer{ canvas };
 	GamesEngineeringBase::Timer timer;
-	canvas.create(1024, 768, "Example");
 	Vec2 position{0.0f,0.0f};
+	GamesEngineeringBase::Image image;
+
+	canvas.create(1024, 768, "Example");
+	image.load("Resources/A.png");
 	constexpr float MOVE_SPEED = 300;
-	constexpr int REC_SIZE = 30;
 
 	// main loop of the game
 	while (running) 
@@ -22,7 +26,7 @@ int main()
 
 		input.update(canvas);
 
-		canvas.clear();
+		renderer.clear();
 
 		if (input.isDown(VK_ESCAPE))
 		{
@@ -32,6 +36,11 @@ int main()
 		float dt = timer.dt();
 		if (dt > 0.05f)
 			dt = 0.05f;
+
+		if (input.wasPressed('J'))
+		{
+			std::cout << "attack!";
+		}
 
 		Vec2 unit{ 0.0f,0.0f };
 		if (input.isDown('W'))
@@ -45,30 +54,9 @@ int main()
 		unit.normalize();
 
 		position += unit * dt * MOVE_SPEED;
-		int width = canvas.getWidth();
-		int height = canvas.getHeight();
-		if (position.x < 0)
-			position.x = 0;
-		if (position.x > (width - REC_SIZE))
-			position.x = (width - REC_SIZE);
-		if (position.y < 0)
-			position.y = 0;
-		if (position.y > (height - REC_SIZE))
-			position.y = (height - REC_SIZE);
+		
+		renderer.drawImage(image,static_cast<int>(position.x), static_cast<int>(position.y));
 
-		if (input.wasPressed('J'))
-		{
-			std::cout << "attack!";
-		}
-
-		for (int i = 0;i < REC_SIZE;i++) 
-		{
-			for (int j = 0;j < REC_SIZE;j++)
-			{
-				canvas.draw(static_cast<int>(position.x + i), static_cast<int>(position.y + j), 0, 0, 255);
-			}
-		}
-
-		canvas.present();
+		renderer.present();
 	}
 }
