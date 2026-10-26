@@ -24,7 +24,7 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Player.cpp">
+    <ClCompile Include="Game\Input.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -32,13 +32,13 @@
     <ClInclude Include="GamesEngineeringBase.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Array.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Core\DynamicArray.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Player.h">
+    <ClInclude Include="Entities\Player.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Input.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

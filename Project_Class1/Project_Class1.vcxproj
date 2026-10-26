@@ -152,13 +152,14 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="Game\Input.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Player.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\DynamicArray.h" />
+    <ClInclude Include="Entities\Player.h" />
     <ClInclude Include="GamesEngineeringBase.h" />
-    <ClInclude Include="Player.h" />
+    <ClInclude Include="Game\Input.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\A.png" />
