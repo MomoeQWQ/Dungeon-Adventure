@@ -151,7 +151,6 @@
     <ClCompile Include="Render\TextureManager.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Core\Config.h" />
     <ClInclude Include="Core\DynamicArray.h" />
     <ClInclude Include="Core\Rect.h" />
     <ClInclude Include="Core\Vec2.h" />

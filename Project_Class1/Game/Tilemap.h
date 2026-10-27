@@ -1,6 +1,7 @@
 #pragma once
 #include "../Core/DynamicArray.h"
 #include "../Core/Vec2.h"
+#include "../Core/Rect.h"
 
 class Renderer;
 class Camera;
@@ -37,6 +38,7 @@ public:
 	static bool isSolid(TileType);
 	int getPixelWidth() const;
 	int getPixelHeight() const;
+	bool isAreaBlocked(const Rect& r) const;
 
 private:
 	int m_col{64};

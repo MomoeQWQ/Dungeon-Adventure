@@ -5,7 +5,6 @@
 #include "Render/Renderer.h"
 #include "Render/TextureManager.h"
 #include "Render/Camera.h"
-#include "Core/Config.h"
 #include "Entities/Player.h"
 #include "Game/World.h"
 #include "Game/Tilemap.h"
@@ -41,7 +40,7 @@ int main()
 	//create Player
 	Vec2 playerPos{ 96,96 };
 	Vec2 playerSize{ 112,96 };
-	Player* playerPtr = new Player (playerPos,playerSize,playerTexPtr,&input);
+	Player* playerPtr = new Player(playerPos, playerSize, playerTexPtr, &input, &map );
 	world.add(playerPtr);
 	
 	// main loop of the game
@@ -77,8 +76,13 @@ int main()
 		//draw map
 		map.draw(renderer, camera);
 		
+		//test: drawbound
+		//Rect bounds = playerPtr->getBounds();
+		//Vec2 leftp = Vec2{ camera.worldToScreen(Vec2{ bounds.x,bounds.y }) };
+		//renderer.drawRect(leftp.x, leftp.y, bounds.w, bounds.h, 255, 0, 0);
+
 		//draw player
-		world.draw(renderer, camera);
+		world.draw(renderer, camera);  
 		renderer.present();
 	}
 }

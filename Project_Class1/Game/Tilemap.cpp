@@ -70,7 +70,26 @@ int Tilemap::getPixelWidth() const
 {
 	return m_col * static_cast<int>(m_tilesize.x);
 }
+
 int Tilemap::getPixelHeight() const
 {
 	return m_row * static_cast<int>(m_tilesize.y);
+}
+
+bool Tilemap::isAreaBlocked(const Rect& r) const
+{
+	//use float ,so if the boundary lies exactly on a grid line, the < operator excludes the next cell.
+	float startCol = r.x / m_tilesize.x;
+	float endCol = (r.x + r.w) / m_tilesize.x;
+	float startRow = r.y / m_tilesize.y;
+	float endRow = (r.y + r.h) / m_tilesize.y;
+	for (int row = static_cast<int>(startRow);row < endRow;row++)
+	{
+		for (int col = static_cast<int>(startCol);col < endCol;col++)
+		{
+			if (isSolid(tileAt(col, row)))
+				return true;
+		}
+	}
+	return false;
 }

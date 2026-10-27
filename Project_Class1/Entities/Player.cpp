@@ -1,5 +1,4 @@
 #include "Player.h"
-#include "../Core/Config.h"
 
 void Player::update(float dt) 
 {
@@ -14,17 +13,15 @@ void Player::update(float dt)
 		unit += Vec2{ 1.0f,0.0f };
 	unit.normalize();
 
-	m_position += unit * dt * m_speed;//calculate the position
+	Vec2 delta = unit * dt * m_speed;//calculate the delta
 
-	//limit the position in the world range
-	float endX = static_cast<float>(WORLD_WIDTH) - m_size.x;
-	float endY = static_cast<float>(WORLD_HEIGHT) - m_size.y;
-	if (m_position.x < 0)
-		m_position.x = 0;
-	if (m_position.x > endX)
-		m_position.x = endX;
-	if (m_position.y < 0)
-		m_position.y = 0;
-	if (m_position.y > endY)
-		m_position.y = endY;
+	float oldX = m_position.x;
+	m_position.x += delta.x;
+	if (m_map->isAreaBlocked(getBounds()))
+		m_position.x = oldX;
+
+	float oldY = m_position.y;
+	m_position.y += delta.y;
+	if (m_map->isAreaBlocked(getBounds()))
+		m_position.y = oldY;
 }
