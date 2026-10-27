@@ -14,6 +14,8 @@ public:
 	void follow(Vec2 target);
 	Vec2 worldToScreen(Vec2 world) const;
 	Vec2 getPosition() const;
+	int getScreenWidth() const;
+	int getScreenHeight() const;
 
 private:
 	Vec2 m_position{};//top-left point of the screen

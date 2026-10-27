@@ -25,3 +25,12 @@ Vec2 Camera::getPosition() const
 {
 	return m_position;
 }
+
+int Camera::getScreenWidth() const
+{
+	return m_screenWidth;
+}
+int Camera::getScreenHeight() const
+{
+	return m_screenHeight;
+}

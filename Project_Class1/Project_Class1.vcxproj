@@ -143,6 +143,7 @@
     <ClCompile Include="Entities\Entity.cpp" />
     <ClCompile Include="Entities\Player.cpp" />
     <ClCompile Include="Game\Input.cpp" />
+    <ClCompile Include="Game\Tilemap.cpp" />
     <ClCompile Include="Game\World.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Render\Camera.cpp" />
@@ -158,6 +159,7 @@
     <ClInclude Include="Entities\Player.h" />
     <ClInclude Include="GamesEngineeringBase.h" />
     <ClInclude Include="Game\Input.h" />
+    <ClInclude Include="Game\Tilemap.h" />
     <ClInclude Include="Game\World.h" />
     <ClInclude Include="Render\Camera.h" />
     <ClInclude Include="Render\Renderer.h" />

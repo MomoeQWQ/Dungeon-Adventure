@@ -8,31 +8,38 @@
 #include "Core/Config.h"
 #include "Entities/Player.h"
 #include "Game/World.h"
+#include "Game/Tilemap.h"
 #include <iostream>
 
 int main()
 {
 	bool running{ true };
-	Input input{};                      //input
-	GamesEngineeringBase::Window canvas;//window
-	GamesEngineeringBase::Timer timer;  //timer
-	Renderer renderer{ canvas };        //renderer
+	Input input{};							//input
+	GamesEngineeringBase::Window canvas;	//window
+	GamesEngineeringBase::Timer timer;		//timer
+	Renderer renderer{ canvas };			//renderer
+	Tilemap map{ 64,48,Vec2{32.0f,32.0f} }; //default map
 	
 	canvas.create(1024, 768, "Example");
 
 	//Camera init(int worldWidth, int worldHeight,int screenWidth,int screenHeight)
-	Camera camera(WORLD_WIDTH, WORLD_HEIGHT, canvas.getWidth(), canvas.getHeight());
+	Camera camera(map.getPixelWidth(), map.getPixelHeight(), canvas.getWidth(), canvas.getHeight());
 	
 	//texture manager
 	TextureManager tm;
 	tm.load("player", "Resources/IDLE.png");
 	const GamesEngineeringBase::Image* playerTexPtr = tm.get("player");
+	if (playerTexPtr == nullptr)
+	{
+		std::cerr << "Failed to load Resources/IDLE.png" << std::endl;
+		return 1;
+	}
 
 	//create World
 	World world{};
 
 	//create Player
-	Vec2 playerPos{ 0,0 };
+	Vec2 playerPos{ 96,96 };
 	Vec2 playerSize{ 112,96 };
 	Player* playerPtr = new Player (playerPos,playerSize,playerTexPtr,&input);
 	world.add(playerPtr);
@@ -43,8 +50,6 @@ int main()
 		canvas.checkInput();
 
 		input.update(canvas);
-
-		renderer.clear();
 
 		if (input.isDown(VK_ESCAPE))
 		{
@@ -67,22 +72,11 @@ int main()
 		camera.follow(playerPtr->getCenter());
 		
 		//clear canvas
-		canvas.clear();
+		renderer.clear();
 
-		//draw background(for test)
-		for (int row = 0; row < WORLD_HEIGHT / 64; row++)
-		{
-			for (int col = 0;col < WORLD_WIDTH / 64;col++)
-			{
-				Vec2 blockcoord{ static_cast<float>(col * 64),static_cast<float>(row * 64) };
-				Vec2 screenblockcoord = camera.worldToScreen(blockcoord);
-				if ((row + col) % 2)
-					renderer.drawRect(static_cast<int>(screenblockcoord.x), static_cast<int>(screenblockcoord.y), 64, 64,0,0,0);
-				else
-					renderer.drawRect(static_cast<int>(screenblockcoord.x), static_cast<int>(screenblockcoord.y), 64, 64, 255, 255, 255);
-			}
-		}
-
+		//draw map
+		map.draw(renderer, camera);
+		
 		//draw player
 		world.draw(renderer, camera);
 		renderer.present();
