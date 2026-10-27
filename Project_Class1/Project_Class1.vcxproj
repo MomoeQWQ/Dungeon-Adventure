@@ -142,19 +142,8 @@
   <ItemGroup>
     <ClCompile Include="Entities\Entity.cpp" />
     <ClCompile Include="Entities\Player.cpp" />
-    <ClCompile Include="Example.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="Exercise.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="Game\Input.cpp" />
+    <ClCompile Include="Game\World.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Render\Camera.cpp" />
     <ClCompile Include="Render\Renderer.cpp" />
@@ -169,6 +158,7 @@
     <ClInclude Include="Entities\Player.h" />
     <ClInclude Include="GamesEngineeringBase.h" />
     <ClInclude Include="Game\Input.h" />
+    <ClInclude Include="Game\World.h" />
     <ClInclude Include="Render\Camera.h" />
     <ClInclude Include="Render\Renderer.h" />
     <ClInclude Include="Render\TextureManager.h" />

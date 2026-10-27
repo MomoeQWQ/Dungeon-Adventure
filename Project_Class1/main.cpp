@@ -7,46 +7,36 @@
 #include "Render/Camera.h"
 #include "Core/Config.h"
 #include "Entities/Player.h"
+#include "Game/World.h"
 #include <iostream>
 
 int main()
 {
 	bool running{ true };
-	Input input{};
-	GamesEngineeringBase::Window canvas;
-	Renderer renderer{ canvas };
-	GamesEngineeringBase::Timer timer;
-
+	Input input{};                      //input
+	GamesEngineeringBase::Window canvas;//window
+	GamesEngineeringBase::Timer timer;  //timer
+	Renderer renderer{ canvas };        //renderer
+	
 	canvas.create(1024, 768, "Example");
+
 	//Camera init(int worldWidth, int worldHeight,int screenWidth,int screenHeight)
 	Camera camera(WORLD_WIDTH, WORLD_HEIGHT, canvas.getWidth(), canvas.getHeight());
 	
-	//test for texture manager
+	//texture manager
 	TextureManager tm;
 	tm.load("player", "Resources/IDLE.png");
-	const GamesEngineeringBase::Image* ptr1 = tm.get("player");
-	//const GamesEngineeringBase::Image* ptr1_5 = tm.load("player", "Resources/A.png");//test if loaded only once
-	//const GamesEngineeringBase::Image* ptr2 = tm.get("player");
-	//if (ptr1 == ptr2)
-	//	std::cout << "same ptr!"<< std::endl;
-	//if (ptr1 == ptr1_5)
-	//	std::cout << "same ptr!" << std::endl;
+	const GamesEngineeringBase::Image* playerTexPtr = tm.get("player");
 
-	//const GamesEngineeringBase::Image* ptr3 = tm.get("enemy");
-	//std::cout << ptr3 << std::endl;
-
-	//tm.load("bad", "Resources/nope.png");
-	//const GamesEngineeringBase::Image* ptr4 = tm.get("bad");
-	//std::cout << ptr4 << std::endl;
-
-
-
+	//create World
+	World world{};
 
 	//create Player
 	Vec2 playerPos{ 0,0 };
 	Vec2 playerSize{ 112,96 };
-	Player player(playerPos,playerSize,ptr1,&input);
-
+	Player* playerPtr = new Player (playerPos,playerSize,playerTexPtr,&input);
+	world.add(playerPtr);
+	
 	// main loop of the game
 	while (running) 
 	{
@@ -71,10 +61,10 @@ int main()
 		}
 		
 		//movement of player
-		player.update(dt);
+		world.update(dt);
 
 		//camera follow and calculate screenCoordinate
-		camera.follow(player.getCenter());
+		camera.follow(playerPtr->getCenter());
 		
 		//clear canvas
 		canvas.clear();
@@ -94,7 +84,7 @@ int main()
 		}
 
 		//draw player
-		player.draw(renderer, camera);
+		world.draw(renderer, camera);
 		renderer.present();
 	}
 }
