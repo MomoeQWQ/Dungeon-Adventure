@@ -140,6 +140,8 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Entities\Entity.cpp" />
+    <ClCompile Include="Entities\Player.cpp" />
     <ClCompile Include="Example.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
@@ -159,9 +161,11 @@
     <ClCompile Include="Render\TextureManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Core\Config.h" />
     <ClInclude Include="Core\DynamicArray.h" />
-    <ClInclude Include="Core\Rec.h" />
+    <ClInclude Include="Core\Rect.h" />
     <ClInclude Include="Core\Vec2.h" />
+    <ClInclude Include="Entities\Entity.h" />
     <ClInclude Include="Entities\Player.h" />
     <ClInclude Include="GamesEngineeringBase.h" />
     <ClInclude Include="Game\Input.h" />
@@ -171,6 +175,7 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\A.png" />
+    <Image Include="Resources\IDLE.png" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="Resources\explosion.wav" />

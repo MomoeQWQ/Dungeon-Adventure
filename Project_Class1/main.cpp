@@ -5,20 +5,17 @@
 #include "Render/Renderer.h"
 #include "Render/TextureManager.h"
 #include "Render/Camera.h"
+#include "Core/Config.h"
+#include "Entities/Player.h"
 #include <iostream>
 
 int main()
 {
-	constexpr int WORLD_WIDTH = 2048;
-	constexpr int WORLD_HEIGHT = 1536;
-	constexpr float MOVE_SPEED = 300;
-
 	bool running{ true };
 	Input input{};
 	GamesEngineeringBase::Window canvas;
 	Renderer renderer{ canvas };
 	GamesEngineeringBase::Timer timer;
-	Vec2 position{0.0f,0.0f};
 
 	canvas.create(1024, 768, "Example");
 	//Camera init(int worldWidth, int worldHeight,int screenWidth,int screenHeight)
@@ -26,7 +23,7 @@ int main()
 	
 	//test for texture manager
 	TextureManager tm;
-	tm.load("player", "Resources/A.png");
+	tm.load("player", "Resources/IDLE.png");
 	const GamesEngineeringBase::Image* ptr1 = tm.get("player");
 	//const GamesEngineeringBase::Image* ptr1_5 = tm.load("player", "Resources/A.png");//test if loaded only once
 	//const GamesEngineeringBase::Image* ptr2 = tm.get("player");
@@ -41,6 +38,14 @@ int main()
 	//tm.load("bad", "Resources/nope.png");
 	//const GamesEngineeringBase::Image* ptr4 = tm.get("bad");
 	//std::cout << ptr4 << std::endl;
+
+
+
+
+	//create Player
+	Vec2 playerPos{ 0,0 };
+	Vec2 playerSize{ 112,96 };
+	Player player(playerPos,playerSize,ptr1,&input);
 
 	// main loop of the game
 	while (running) 
@@ -64,38 +69,17 @@ int main()
 		{
 			std::cout << "attack!";
 		}
-
-		Vec2 unit{ 0.0f,0.0f };
-		if (input.isDown('W'))
-			unit += Vec2{ 0.0f,-1.0f };
-		if (input.isDown('A'))
-			unit += Vec2{ -1.0f,0.0f };
-		if (input.isDown('S'))
-			unit += Vec2{ 0.0f,1.0f };
-		if (input.isDown('D'))
-			unit += Vec2{ 1.0f,0.0f };
-		unit.normalize();
-
-		position += unit * dt * MOVE_SPEED;//calculate the position
-
-		//limit the position in the world range
-		float endX = static_cast<float>(WORLD_WIDTH) - static_cast<int>(ptr1->width);
-		float endY = static_cast<float>(WORLD_HEIGHT) - static_cast<int>(ptr1->height);
-		if (position.x < 0)
-			position.x = 0;
-		if (position.x > endX)
-			position.x = endX;
-		if (position.y < 0)
-			position.y = 0;
-		if (position.y > endY)
-			position.y = endY;
 		
+		//movement of player
+		player.update(dt);
+
 		//camera follow and calculate screenCoordinate
-		Vec2 cpoint{ position.x + ptr1->width / 2,position.y + ptr1->height / 2 };
-		camera.follow(cpoint);
-		Vec2 screenCoord{ camera.worldToScreen(position) };
+		camera.follow(player.getCenter());
 		
-		//paint background(for test)
+		//clear canvas
+		canvas.clear();
+
+		//draw background(for test)
 		for (int row = 0; row < WORLD_HEIGHT / 64; row++)
 		{
 			for (int col = 0;col < WORLD_WIDTH / 64;col++)
@@ -109,8 +93,8 @@ int main()
 			}
 		}
 
-		//now use pointer from TextureManager to load image
-		renderer.drawImage(*ptr1,static_cast<int>(screenCoord.x), static_cast<int>(screenCoord.y));
+		//draw player
+		player.draw(renderer, camera);
 		renderer.present();
 	}
 }
