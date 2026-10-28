@@ -10,7 +10,8 @@ public:
 	BitmapFont() = default;
 	bool load(const GamesEngineeringBase::Image* image);
 	void drawText(Renderer& renderer, const std::string& text, int x, int y) const;
-	int measureText(const std::string& text) const;//calculate pixel width of a text
+	// reserved: calculate pixel width of a text, maybe is useful in somewhere
+	// int measureText(const std::string& text) const;
 
 private:
 	const GamesEngineeringBase::Image* m_fontImg{};
@@ -21,5 +22,5 @@ private:
 	int m_startRow{};
 	int m_letterSpacing{};
 
-	int glyphIndex(char c) const;
+	int glyphIndex(char c) const;//char to glyphIndex, private as we don't use it outside class
 };

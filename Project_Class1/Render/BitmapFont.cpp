@@ -52,6 +52,7 @@ bool BitmapFont::load(const GamesEngineeringBase::Image* image)
 		}
 	}
 
+	//in case end pixel is not Magenta
 	if (tempColor == Transparent) 
 	{
 		width.push_back(static_cast<int>(image->width) - lastStartX);
@@ -81,6 +82,11 @@ bool BitmapFont::load(const GamesEngineeringBase::Image* image)
 	m_startX = startX;
 	m_width = width;
 	return true;
+}
+
+void BitmapFont::drawText(Renderer& renderer, const std::string& text, int x, int y) const
+{
+	
 }
 
 int BitmapFont::glyphIndex(char c) const
