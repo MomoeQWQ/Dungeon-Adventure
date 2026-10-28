@@ -12,16 +12,16 @@
 
 int main()
 {
-	bool running{ true };
+	bool running{ true };					//set game status running
 	Input input{};							//input
 	GamesEngineeringBase::Window canvas;	//window
 	GamesEngineeringBase::Timer timer;		//timer
 	Renderer renderer{ canvas };			//renderer
 	Tilemap map{ 64,48,Vec2{32.0f,32.0f} }; //default map
 	if (!map.loadFromFile("Resources/map1.txt"))
-		return 1;
+		return 1;                           //load map from file
 	
-	canvas.create(1024, 768, "Example");
+	canvas.create(1024, 768, "Example");    //create window
 
 	//Camera init(int worldWidth, int worldHeight,int screenWidth,int screenHeight)
 	//We need to create camera after map cuz it relies on the latter one
