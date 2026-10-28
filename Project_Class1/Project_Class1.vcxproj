@@ -146,6 +146,7 @@
     <ClCompile Include="Game\Tilemap.cpp" />
     <ClCompile Include="Game\World.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Render\BitmapFont.cpp" />
     <ClCompile Include="Render\Camera.cpp" />
     <ClCompile Include="Render\Renderer.cpp" />
     <ClCompile Include="Render\TextureManager.cpp" />
@@ -160,6 +161,7 @@
     <ClInclude Include="Game\Input.h" />
     <ClInclude Include="Game\Tilemap.h" />
     <ClInclude Include="Game\World.h" />
+    <ClInclude Include="Render\BitmapFont.h" />
     <ClInclude Include="Render\Camera.h" />
     <ClInclude Include="Render\Renderer.h" />
     <ClInclude Include="Render\TextureManager.h" />
@@ -167,6 +169,8 @@
   <ItemGroup>
     <Image Include="Resources\A.png" />
     <Image Include="Resources\Font\SweetSunset+SweetSunrise\spritesheets\SweetSunset_bitmap_x1.png" />
+    <Image Include="Resources\Font\SweetSunset+SweetSunrise\spritesheets\SweetSunset_bitmap_x2.png" />
+    <Image Include="Resources\Font\SweetSunset+SweetSunrise\spritesheets\SweetSunset_bitmap_x2_rgba.png" />
     <Image Include="Resources\IDLE.png" />
   </ItemGroup>
   <ItemGroup>

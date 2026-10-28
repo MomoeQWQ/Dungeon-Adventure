@@ -8,6 +8,7 @@
 #include "Entities/Player.h"
 #include "Game/World.h"
 #include "Game/Tilemap.h"
+#include "Render/BitmapFont.h"
 #include <iostream>
 
 int main()
@@ -17,10 +18,11 @@ int main()
 	GamesEngineeringBase::Window canvas;	//window
 	GamesEngineeringBase::Timer timer;		//timer
 	Renderer renderer{ canvas };			//renderer
+
 	Tilemap map{ 64,48,Vec2{32.0f,32.0f} }; //default map
 	if (!map.loadFromFile("Resources/map1.txt"))
 		return 1;                           //load map from file
-	
+
 	canvas.create(1024, 768, "Example");    //create window
 
 	//Camera init(int worldWidth, int worldHeight,int screenWidth,int screenHeight)
@@ -36,6 +38,10 @@ int main()
 		std::cerr << "Failed to load Resources/IDLE.png" << std::endl;
 		return 1;
 	}
+
+	//load font
+	BitmapFont font{};						
+	font.load(tm.load("font","Resources/Font/SweetSunset+SweetSunrise/spritesheets/SweetSunset_bitmap_x2_rgba.png"));
 
 	//create World
 	World world{};

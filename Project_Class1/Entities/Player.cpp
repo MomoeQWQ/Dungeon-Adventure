@@ -22,6 +22,6 @@ void Player::update(float dt)
 
 	float oldY = m_position.y;
 	m_position.y += delta.y;
-	if (m_map->isAreaBlocked(getBounds()))
+	if (m_map->isAreaBlocked(getBounds()))  
 		m_position.y = oldY;
 }
