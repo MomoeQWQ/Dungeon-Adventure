@@ -8,7 +8,8 @@ class Camera;
 enum class TileType 
 {
 	Wall = 0,
-	Road = 1
+	Road = 1,
+	Count
 };
 
 class Tilemap
@@ -39,6 +40,7 @@ public:
 	int getPixelWidth() const;
 	int getPixelHeight() const;
 	bool isAreaBlocked(const Rect& r) const;
+	bool loadFromFile(const std::string& path);
 
 private:
 	int m_col{64};

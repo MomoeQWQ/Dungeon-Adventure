@@ -1,6 +1,9 @@
 #include "Tilemap.h"
 #include "../Render/Renderer.h"
 #include "../Render/Camera.h"
+#include "../Core/DynamicArray.h"
+#include <fstream>
+#include <iostream>
 
 TileType Tilemap::tileAt(int col, int row) const
 {
@@ -92,4 +95,43 @@ bool Tilemap::isAreaBlocked(const Rect& r) const
 		}
 	}
 	return false;
+}
+
+bool Tilemap::loadFromFile(const std::string& path) 
+{
+	std::ifstream file{ path };
+	if (!file.is_open())
+	{
+		std::cerr << " map does not exist in " << path << std::endl;
+		return false;
+	}
+	int fCol{}, fRow{}, n{};
+	if (!(file >> fCol >> fRow) || fCol <= 0 || fRow <= 0) 
+	{
+		std::cerr << "file Col/Row is bad to read, zero or minus";
+		return false;
+	}
+
+	DynamicArray<TileType> temp{};
+	for (int row = 0;row < fRow;row++) 
+	{
+		for (int col = 0;col < fCol;col++) 
+		{
+			if (!(file >> n))
+			{
+				std::cerr << " file is shorter than expected " << std::endl;
+				return false;
+			}
+			if (!(n >= 0 && n < static_cast<int>(TileType::Count))) 
+			{
+				std::cerr << " tile in " << row <<"\t"<<col<<"is not a valid tiletype" << std::endl;
+				n = static_cast<int>(TileType::Wall);//set it to W(default)
+			}
+			temp.push_back(static_cast<TileType>(n));
+		}
+	}
+	m_row = fRow;
+	m_col = fCol;
+	m_tiles = temp;
+	return true;
 }

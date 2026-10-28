@@ -17,6 +17,7 @@ public:
 	void update(float dt);
 	void draw(Renderer&, const Camera&) const;
 	int getCount() const;
+	bool loadfromfile() const;
 
 private:
 	DynamicArray<Entity*> m_entities{};

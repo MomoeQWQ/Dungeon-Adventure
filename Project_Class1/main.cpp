@@ -18,10 +18,13 @@ int main()
 	GamesEngineeringBase::Timer timer;		//timer
 	Renderer renderer{ canvas };			//renderer
 	Tilemap map{ 64,48,Vec2{32.0f,32.0f} }; //default map
+	if (!map.loadFromFile("Resources/map1.txt"))
+		return 1;
 	
 	canvas.create(1024, 768, "Example");
 
 	//Camera init(int worldWidth, int worldHeight,int screenWidth,int screenHeight)
+	//We need to create camera after map cuz it relies on the latter one
 	Camera camera(map.getPixelWidth(), map.getPixelHeight(), canvas.getWidth(), canvas.getHeight());
 	
 	//texture manager

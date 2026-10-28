@@ -23,7 +23,7 @@ const GamesEngineeringBase::Image* TextureManager::load(const std::string& name,
 		std::ifstream file{ path };
 		if (!file.is_open())
 		{
-			std::cout << name << " does not exist in " << path << std::endl;
+			std::cerr << name << " does not exist in " << path << std::endl;
 			return nullptr;
 		}
 	}
