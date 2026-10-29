@@ -86,7 +86,21 @@ bool BitmapFont::load(const GamesEngineeringBase::Image* image)
 
 void BitmapFont::drawText(Renderer& renderer, const std::string& text, int x, int y) const
 {
-	
+	if (m_fontImg == nullptr)
+		return;
+	int cursorX = x;
+	for (char ch : text) 
+	{
+		int g = glyphIndex(ch);
+		if (g == -1)
+		{ 
+			cursorX += m_letterSpacing;
+			continue;
+		}
+			
+		renderer.drawImage(*m_fontImg, cursorX, y, m_startX[g], m_startRow, m_width[g], m_height);
+		cursorX += (m_width[g] + m_letterSpacing);
+	}
 }
 
 int BitmapFont::glyphIndex(char c) const

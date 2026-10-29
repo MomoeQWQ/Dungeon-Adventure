@@ -92,6 +92,10 @@ int main()
 
 		//draw player
 		world.draw(renderer, camera);  
+
+		//draw hud
+		font.drawText(renderer, "Hello 0123 ^", 10, 10);
+
 		renderer.present();
 	}
 }

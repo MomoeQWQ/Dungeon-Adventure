@@ -20,7 +20,7 @@ private:
 	int m_charToGlyph[128]{};//find table
 	int m_height{};
 	int m_startRow{};
-	int m_letterSpacing{};
+	int m_letterSpacing{2};
 
 	int glyphIndex(char c) const;//char to glyphIndex, private as we don't use it outside class
 };
