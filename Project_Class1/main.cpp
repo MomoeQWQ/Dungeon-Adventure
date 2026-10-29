@@ -1,5 +1,5 @@
 #include "GamesEngineeringBase.h"
-#include "./Core/DynamicArray.h"
+#include "Core/DynamicArray.h"
 #include "Game/Input.h"
 #include "Core/Vec2.h"
 #include "Render/Renderer.h"
@@ -9,7 +9,9 @@
 #include "Game/World.h"
 #include "Game/Tilemap.h"
 #include "Render/BitmapFont.h"
+#include "Core/FpsCounter.h"
 #include <iostream>
+#include <string>
 
 int main()
 {
@@ -18,6 +20,7 @@ int main()
 	GamesEngineeringBase::Window canvas;	//window
 	GamesEngineeringBase::Timer timer;		//timer
 	Renderer renderer{ canvas };			//renderer
+	FpsCounter fpscounter{};				//fpscounter
 
 	Tilemap map{ 64,48,Vec2{32.0f,32.0f} }; //default map
 	if (!map.loadFromFile("Resources/map1.txt"))
@@ -65,6 +68,9 @@ int main()
 		}
 
 		float dt = timer.dt();
+		//before restrict dt,use raw dt to update fps
+		fpscounter.update(dt);
+
 		if (dt > 0.05f)
 			dt = 0.05f;
 
@@ -93,8 +99,8 @@ int main()
 		//draw player
 		world.draw(renderer, camera);  
 
-		//draw hud
-		font.drawText(renderer, "Hello 0123 ^", 10, 10);
+		//draw fps
+		font.drawText(renderer, "FPS: " + std::to_string(fpscounter.getFps()), 10, 10);
 
 		renderer.present();
 	}

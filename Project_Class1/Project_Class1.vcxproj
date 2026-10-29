@@ -153,6 +153,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\DynamicArray.h" />
+    <ClInclude Include="Core\FpsCounter.h" />
     <ClInclude Include="Core\Rect.h" />
     <ClInclude Include="Core\Vec2.h" />
     <ClInclude Include="Entities\Entity.h" />

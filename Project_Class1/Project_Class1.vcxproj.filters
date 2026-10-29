@@ -89,6 +89,9 @@
     <ClInclude Include="Render\BitmapFont.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Core\FpsCounter.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\A.png">
