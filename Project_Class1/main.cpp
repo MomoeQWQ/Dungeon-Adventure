@@ -10,6 +10,8 @@
 #include "Game/Tilemap.h"
 #include "Render/BitmapFont.h"
 #include "Core/FpsCounter.h"
+#include "Entities/EnemyDef.h"
+#include "Entities/Enemy.h"
 #include <iostream>
 #include <string>
 
@@ -52,9 +54,22 @@ int main()
 	//create Player
 	Vec2 playerPos{ 96,96 };
 	Vec2 playerSize{ 112,96 };
-	Player* playerPtr = new Player(playerPos, playerSize, playerTexPtr, 100, &input, &map );
+	Player* playerPtr = new Player(playerPos, playerSize, playerTexPtr, 100, &map, &input );
 	world.add(playerPtr);
 	
+	//create Enemy1
+	EnemyDef def1
+	{
+		.size{ 112.0f,96.0f },
+		.hitboxOffset{ 39.0f,49.0f },
+		.hitboxSize{ 31.0f,37.0f },
+		.tex{ playerTexPtr },
+		.maxHp{ 30 },
+		.contactDamage{ 10 },
+		.speed{ 100 }
+	};
+	world.add(new Enemy(Vec2{ 32.0f,32.0f }, &map, playerPtr, def1));
+
 	// main loop of the game
 	while (running) 
 	{

@@ -15,13 +15,5 @@ void Player::update(float dt)
 
 	Vec2 delta = unit * dt * m_speed;//calculate the delta
 
-	float oldX = m_position.x;
-	m_position.x += delta.x;
-	if (m_map->isAreaBlocked(getBounds()))
-		m_position.x = oldX;
-
-	float oldY = m_position.y;
-	m_position.y += delta.y;
-	if (m_map->isAreaBlocked(getBounds()))  
-		m_position.y = oldY;
+	moveWithCollision(delta);
 }

@@ -32,3 +32,16 @@ int Character::getMaxHp() const
 {
 	return m_maxHp;
 }
+
+void Character::moveWithCollision(Vec2 delta)
+{
+	float oldX = m_position.x;
+	m_position.x += delta.x;
+	if (m_map->isAreaBlocked(getBounds()))
+		m_position.x = oldX;
+
+	float oldY = m_position.y;
+	m_position.y += delta.y;
+	if (m_map->isAreaBlocked(getBounds()))
+		m_position.y = oldY;
+}
