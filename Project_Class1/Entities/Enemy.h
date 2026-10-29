@@ -5,12 +5,13 @@
 class Enemy : public Character
 {
 public:
-	Enemy (Vec2 pos, const Tilemap* map, const Character* target, const EnemyDef& def);
-	void update(float dt) override;
+	Enemy (Vec2 pos, const Tilemap* map, Character* target, const EnemyDef& def);
 	int getContactDamage() const;
 
 private:
-	const Character* m_target{};
+	Character* m_target{};
 	float m_speed{};
 	int m_contactDamage{};
+
+	void onUpdate(float dt) override;
 };

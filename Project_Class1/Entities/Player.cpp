@@ -1,6 +1,6 @@
 #include "Player.h"
 
-void Player::update(float dt) 
+void Player::onUpdate(float dt) 
 {
 	Vec2 unit{ 0.0f,0.0f };
 	if (m_input->isDown('W'))

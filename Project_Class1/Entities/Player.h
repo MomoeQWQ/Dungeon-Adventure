@@ -17,8 +17,6 @@ public:
 		m_hitboxSize = Vec2{ kHitboxSizeX ,kHitboxSizeY };
 	}
 
-	void update(float dt) override;
-
 private:
 	const Input* m_input{};
 	float m_speed{200.0f};
@@ -26,5 +24,7 @@ private:
 	static constexpr float kHitboxOffsetY{ 49.0f };
 	static constexpr float kHitboxSizeX{ 31.0f };
 	static constexpr float kHitboxSizeY{ 37.0f };//due to png picture
+
+	void onUpdate(float dt) override;
 };
 

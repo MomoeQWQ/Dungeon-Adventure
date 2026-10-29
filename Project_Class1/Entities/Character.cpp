@@ -5,8 +5,11 @@
 void Character::takeDamage(int damage)
 {
 	assert(damage >= 0 && "a minus damage cannot be applied!");
+	if (m_invulnTimer > 0)
+		return;//character is in i-frames
 	m_hp -= damage;
 	m_hp = std::clamp(m_hp, 0, m_maxHp);
+	m_invulnTimer = kInvulnDuration;
 }
 
 void Character::heal(int healValue)
@@ -44,4 +47,16 @@ void Character::moveWithCollision(Vec2 delta)
 	m_position.y += delta.y;
 	if (m_map->isAreaBlocked(getBounds()))
 		m_position.y = oldY;
+}
+
+void Character::update(float dt)
+{
+	m_invulnTimer -= dt;
+	m_invulnTimer = std::max(0.0f, m_invulnTimer);
+	onUpdate(dt);//NVI,since every character should have i-frames
+}
+
+bool Character::isInvulnerable() const
+{
+	return m_invulnTimer > 0.0f;
 }

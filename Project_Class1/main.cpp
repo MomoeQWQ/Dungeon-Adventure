@@ -58,7 +58,7 @@ int main()
 	world.add(playerPtr);
 	
 	//create Enemy1
-	EnemyDef def1
+	EnemyDef def1 //balanced
 	{
 		.size{ 112.0f,96.0f },
 		.hitboxOffset{ 39.0f,49.0f },
@@ -68,7 +68,29 @@ int main()
 		.contactDamage{ 10 },
 		.speed{ 100 }
 	};
+	EnemyDef def2 //fast but squishy
+	{
+		.size{ 112.0f,96.0f },
+		.hitboxOffset{ 39.0f,49.0f },
+		.hitboxSize{ 31.0f,37.0f },
+		.tex{ playerTexPtr },
+		.maxHp{ 15 },
+		.contactDamage{ 5 },
+		.speed{ 150 }
+	};
+	EnemyDef def3 //slow but tanky
+	{
+		.size{ 112.0f,96.0f },
+		.hitboxOffset{ 39.0f,49.0f },
+		.hitboxSize{ 31.0f,37.0f },
+		.tex{ playerTexPtr },
+		.maxHp{ 80 },
+		.contactDamage{ 20 },
+		.speed{ 60 }
+	};
 	world.add(new Enemy(Vec2{ 32.0f,32.0f }, &map, playerPtr, def1));
+	world.add(new Enemy(Vec2{ 32.0f,32.0f }, &map, playerPtr, def2));
+	world.add(new Enemy(Vec2{ 32.0f,32.0f }, &map, playerPtr, def3));
 
 	// main loop of the game
 	while (running) 
