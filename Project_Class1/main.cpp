@@ -52,7 +52,7 @@ int main()
 	//create Player
 	Vec2 playerPos{ 96,96 };
 	Vec2 playerSize{ 112,96 };
-	Player* playerPtr = new Player(playerPos, playerSize, playerTexPtr, &input, &map );
+	Player* playerPtr = new Player(playerPos, playerSize, playerTexPtr, 100, &input, &map );
 	world.add(playerPtr);
 	
 	// main loop of the game
@@ -77,6 +77,7 @@ int main()
 		if (input.wasPressed('J'))
 		{
 			std::cout << "attack!";
+			playerPtr->takeDamage(10);
 		}
 		
 		//movement of player
@@ -100,7 +101,13 @@ int main()
 		world.draw(renderer, camera);  
 
 		//draw fps
-		font.drawText(renderer, "FPS: " + std::to_string(fpscounter.getFps()), 10, 10);
+		font.drawText(renderer, "FPS: " + std::to_string(fpscounter.getFps()), camera.getScreenWidth()-font.measureText("FPS: 999")-10, 10);
+
+		//draw Hp bar
+		font.drawText(renderer, "^", 10, 10);
+		renderer.drawRect(font.measureText("^") + 20, (41 - 10) / 2, 200, 30, 105, 105, 105);
+		renderer.drawRect(font.measureText("^") + 20, (41 - 10) / 2, 200 * static_cast<float>(playerPtr->getHp()) / playerPtr->getMaxHp(), 30, 244, 128, 128);
+		font.drawText(renderer, std::to_string(playerPtr->getHp()) + "/" + std::to_string(playerPtr->getMaxHp()), font.measureText("^") + 230, 9);
 
 		renderer.present();
 	}

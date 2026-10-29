@@ -140,6 +140,7 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Entities\Character.cpp" />
     <ClCompile Include="Entities\Entity.cpp" />
     <ClCompile Include="Entities\Player.cpp" />
     <ClCompile Include="Game\Input.cpp" />
@@ -156,6 +157,7 @@
     <ClInclude Include="Core\FpsCounter.h" />
     <ClInclude Include="Core\Rect.h" />
     <ClInclude Include="Core\Vec2.h" />
+    <ClInclude Include="Entities\Character.h" />
     <ClInclude Include="Entities\Entity.h" />
     <ClInclude Include="Entities\Player.h" />
     <ClInclude Include="GamesEngineeringBase.h" />

@@ -10,8 +10,7 @@ public:
 	BitmapFont() = default;
 	bool load(const GamesEngineeringBase::Image* image);
 	void drawText(Renderer& renderer, const std::string& text, int x, int y) const;
-	// reserved: calculate pixel width of a text, maybe is useful in somewhere
-	// int measureText(const std::string& text) const;
+	int measureText(const std::string& text) const;
 
 private:
 	const GamesEngineeringBase::Image* m_fontImg{};

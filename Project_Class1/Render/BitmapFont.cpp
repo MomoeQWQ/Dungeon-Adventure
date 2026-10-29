@@ -109,3 +109,19 @@ int BitmapFont::glyphIndex(char c) const
 		return -1;
 	return m_charToGlyph[c];
 }
+
+int BitmapFont::measureText(const std::string& text) const
+{
+	if (m_fontImg == nullptr)
+		return 0;
+	int textLength{};
+	for (char ch : text)
+	{
+		int g = glyphIndex(ch);
+		if (g == -1)
+			continue;
+		textLength += (m_letterSpacing + m_width[g]);
+	}
+	textLength -= m_letterSpacing;
+	return textLength;
+}

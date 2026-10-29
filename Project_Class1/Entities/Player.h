@@ -1,17 +1,17 @@
 #pragma once
-#include "Entity.h"
+#include "Character.h"
 #include "../Game/Input.h"
 #include "../Game/Tilemap.h"
 #include <cassert>
 
 
-class Player : public Entity
+class Player : public Character
 {
 public:
-	Player(Vec2 pos, Vec2 size, const GamesEngineeringBase::Image* tex,const Input* input, const Tilemap* map)
-		:Entity{pos,size,tex}
+	Player(Vec2 pos, Vec2 size, const GamesEngineeringBase::Image* tex, int maxHp, const Input* input, const Tilemap* map)
+		:Character{pos,size,tex,maxHp}
 		,m_input{input}
-		, m_map{map}
+		,m_map{map}
 	{
 		assert(input != nullptr && "nullptr input cannot be accepted to create a Player!");
 		assert(map != nullptr && "nullptr map cannot be accepted to create a Player!");
