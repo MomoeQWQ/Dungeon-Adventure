@@ -28,6 +28,7 @@ protected:
 	}
 
 	void moveWithCollision(Vec2 delta);//shared by Player and Enemy
+	const Tilemap* getMap() const;
 
 private:
 	static constexpr float kInvulnDuration{ 0.8f };

@@ -60,3 +60,8 @@ bool Character::isInvulnerable() const
 {
 	return m_invulnTimer > 0.0f;
 }
+
+const Tilemap* Character::getMap() const
+{
+	return m_map;
+}

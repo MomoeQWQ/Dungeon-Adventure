@@ -12,6 +12,7 @@
 #include "Core/FpsCounter.h"
 #include "Entities/EnemyDef.h"
 #include "Entities/Enemy.h"
+#include "Entities/Spawner.h"
 #include <iostream>
 #include <string>
 
@@ -37,10 +38,17 @@ int main()
 	//texture manager
 	TextureManager tm;
 	tm.load("player", "Resources/IDLE.png");
+	tm.load("spawner", "Resources/HURT.png");
 	const GamesEngineeringBase::Image* playerTexPtr = tm.get("player");
+	const GamesEngineeringBase::Image* spawnerTexPtr = tm.get("spawner");
 	if (playerTexPtr == nullptr)
 	{
 		std::cerr << "Failed to load Resources/IDLE.png" << std::endl;
+		return 1;
+	}
+	if (spawnerTexPtr == nullptr)
+	{
+		std::cerr << "Failed to load Resources/HURT.png" << std::endl;
 		return 1;
 	}
 
@@ -48,16 +56,12 @@ int main()
 	BitmapFont font{};						
 	font.load(tm.load("font","Resources/Font/SweetSunset+SweetSunrise/spritesheets/SweetSunset_bitmap_x2_rgba.png"));
 
-	//create World
-	World world{};
-
 	//create Player
 	Vec2 playerPos{ 96,96 };
 	Vec2 playerSize{ 112,96 };
 	Player* playerPtr = new Player(playerPos, playerSize, playerTexPtr, 100, &map, &input );
-	world.add(playerPtr);
-	
-	//create Enemy1
+
+	//create EnemyDefs
 	EnemyDef def1 //balanced
 	{
 		.size{ 112.0f,96.0f },
@@ -88,9 +92,15 @@ int main()
 		.contactDamage{ 20 },
 		.speed{ 60 }
 	};
-	world.add(new Enemy(Vec2{ 32.0f,32.0f }, &map, playerPtr, def1));
-	world.add(new Enemy(Vec2{ 32.0f,32.0f }, &map, playerPtr, def2));
-	world.add(new Enemy(Vec2{ 32.0f,32.0f }, &map, playerPtr, def3));
+
+	//create World
+	World world{};
+
+	world.add(playerPtr);
+	world.add(new Spawner(Vec2{ 200.0f,200.0f }, playerSize, spawnerTexPtr, 100 , &map, &world, playerPtr, &def1, 5.0f));
+	//world.add(new Enemy(Vec2{ 32.0f,32.0f }, &map, playerPtr, def1));
+	//world.add(new Enemy(Vec2{ 32.0f,32.0f }, &map, playerPtr, def2));
+	//world.add(new Enemy(Vec2{ 32.0f,32.0f }, &map, playerPtr, def3));
 
 	// main loop of the game
 	while (running) 

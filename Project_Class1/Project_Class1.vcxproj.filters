@@ -75,6 +75,9 @@
     <ClCompile Include="Render\TextureManager.cpp">
       <Filter>Source Files\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="Entities\Spawner.cpp">
+      <Filter>Source Files\Entity</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GamesEngineeringBase.h">
@@ -126,7 +129,10 @@
       <Filter>Header Files\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="Entities\EnemyDef.h">
-      <Filter>Source Files\Entity</Filter>
+      <Filter>Header Files\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="Entities\Spawner.h">
+      <Filter>Header Files\Entity</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -144,6 +150,9 @@
     </Image>
     <Image Include="Resources\Font\SweetSunset+SweetSunrise\spritesheets\SweetSunset_bitmap_x2_rgba.png">
       <Filter>Resource Files\font</Filter>
+    </Image>
+    <Image Include="Resources\HURT.png">
+      <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
   <ItemGroup>
