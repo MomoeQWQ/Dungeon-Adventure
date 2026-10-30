@@ -36,3 +36,13 @@ Team Entity::getTeam() const
 {
 	return m_team;
 }
+
+int Entity::getId() const 
+{
+	return m_id;
+}
+
+void Entity::setId(int id) 
+{
+	m_id = id;
+}

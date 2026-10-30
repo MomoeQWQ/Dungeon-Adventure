@@ -166,6 +166,9 @@
     <Image Include="Resources\bullet.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="Resources\magic.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Media Include="Resources\explosion.wav">

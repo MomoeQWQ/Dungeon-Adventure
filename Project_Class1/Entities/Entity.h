@@ -34,6 +34,12 @@ public:
 
 	Team getTeam() const;
 
+	int getId() const;
+
+	void setId(int id);//only class world is permitted to use this function
+
+	virtual int getHp() const { return 0; }
+
 protected:
 	Entity(Vec2 pos, Vec2 size, const GamesEngineeringBase::Image* tex)
 		:m_position{ pos }
@@ -43,6 +49,7 @@ protected:
 	{
 	}
 
+	int m_id{-1};
 	Vec2 m_position{};
 	Vec2 m_size{};
 	const GamesEngineeringBase::Image* m_texture{};

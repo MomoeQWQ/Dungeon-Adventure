@@ -185,6 +185,7 @@
     <Image Include="Resources\Font\SweetSunset+SweetSunrise\spritesheets\SweetSunset_bitmap_x2_rgba.png" />
     <Image Include="Resources\HURT.png" />
     <Image Include="Resources\IDLE.png" />
+    <Image Include="Resources\magic.png" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="Resources\explosion.wav" />

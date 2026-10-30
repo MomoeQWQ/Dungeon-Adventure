@@ -2,6 +2,9 @@
 #include "../Render/Renderer.h"
 #include "../Render/Camera.h"
 #include <cassert>
+#include <algorithm>
+
+constexpr int MaxtopN = 8;
 
 World::~World()
 {
@@ -14,6 +17,7 @@ World::~World()
 void World::add(Entity* e) 
 {
 	assert(e != nullptr && "enetity cannot be nullptr");
+	e->setId(m_nextId++);//set entity id
 	m_entities.push_back(e);
 }
 
@@ -65,4 +69,71 @@ bool World::damageArea(const Rect& area, int damage, Team attacker)
 		}
 	}
 	return hitOne;
+}
+
+//design Id to search magic bullet target by index, aiming at avoiding pointer to visit released memories
+//cuz now we visit Id(int) instead of pointer
+Entity* World::findById(int id) const
+{
+	for (int i = 0;i < m_entities.getSize();i++) 
+	{
+		if (m_entities[i]->getId() == id && m_entities[i]->isAlive())
+		{
+			return m_entities[i];
+		}
+	}
+	return nullptr;
+}
+
+//select TopN highestHp target id
+int World::selectHighestHp(Vec2 center, float range, Team attacker, int* outIds, int n) const
+{
+	assert(outIds != nullptr && "World::selectHighestHp outIds = nullpter!");
+	assert(n > 0 && n <= MaxtopN && "now World::selectHighestHp only supports 0 <N <= MaxtopN");
+	struct Candidate { int id; int hp; };
+	Candidate best[MaxtopN]{};
+	int count{ 0 };
+	float range2 = range * range;
+	for (int i = 0;i < m_entities.getSize();i++)
+	{
+		int hp = m_entities[i]->getHp();
+		if (!m_entities[i]->isAlive())
+			continue;
+
+		if (hp <= 0)
+			continue;
+
+		if (m_entities[i]->getTeam() == Team::Neutral || m_entities[i]->getTeam() == attacker)
+			continue;
+
+		Vec2 d = m_entities[i]->getCenter() - center;
+		float d2 = d.x * d.x + d.y * d.y;
+		if (d2 > range2)
+			continue;
+
+		int k{};
+		if (count < n)
+		{
+			best[count] = Candidate{ m_entities[i]->getId() , hp };
+			k = count;
+			count++;
+		}
+		else if (hp > best[n - 1].hp)
+		{
+			best[n - 1] = Candidate{ m_entities[i]->getId() , hp };
+			k = n - 1;
+		}
+		else
+			continue;
+		while (k > 0 && best[k - 1].hp < best[k].hp)
+		{
+			std::swap(best[k - 1], best[k]);
+			k--;
+		}
+	}
+	for(int i = 0;i< count;i++)
+	{
+		outIds[i] = best[i].id;
+	}
+	return count;
 }

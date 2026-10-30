@@ -41,9 +41,11 @@ int main()
 	tm.load("player", "Resources/IDLE.png");
 	tm.load("spawner", "Resources/IDLE.png");
 	tm.load("bullet", "Resources/bullet.png");
+	tm.load("magicbullet", "Resources/magic.png");
 	const GamesEngineeringBase::Image* playerTexPtr = tm.get("player");
 	const GamesEngineeringBase::Image* spawnerTexPtr = tm.get("spawner");
 	const GamesEngineeringBase::Image* bulletTexPtr = tm.get("bullet");
+	const GamesEngineeringBase::Image* magicTexPtr = tm.get("magicbullet");
 	if (playerTexPtr == nullptr)
 	{
 		std::cerr << "Failed to load Resources/IDLE.png" << std::endl;
@@ -95,11 +97,21 @@ int main()
 	//create ProjectileDefs
 	ProjectileDef projDef1
 	{
-		.size{ 10.0f,10.0f },
+		.size{ 12.0f,12.0f },
 		.tex{ bulletTexPtr },
 		.speed{ 400.0f },
 		.damage{ 10 },
 		.lifetime{ 0.8f }
+	};
+
+	//create MagicDefs
+	ProjectileDef magicDef1
+	{
+		.size{ 20.0f,20.0f },
+		.tex{ magicTexPtr },
+		.speed{ 250.0f },
+		.damage{ 25 },
+		.lifetime{ 3.0f }
 	};
 
 	//create World
@@ -108,7 +120,7 @@ int main()
 	//create Player
 	Vec2 playerPos{ 96,96 };
 	Vec2 playerSize{ 112,96 };
-	Player* playerPtr = new Player(playerPos, playerSize, playerTexPtr, 100, &map, &input, &world,&projDef1);
+	Player* playerPtr = new Player(playerPos, playerSize, playerTexPtr, 100, &map, &input, &world, &projDef1, &magicDef1);
 
 	world.add(playerPtr);
 	world.add(new Spawner(Vec2{ 200.0f,200.0f }, playerSize, spawnerTexPtr, 100 , &map, &world, playerPtr, &def1, 5.0f));

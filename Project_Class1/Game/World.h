@@ -19,9 +19,12 @@ public:
 	int getCount() const;
 	bool loadfromfile() const;//reserved
 	bool damageArea(const Rect& area, int damage, Team attacker);
+	Entity* findById(int id) const;
+	int selectHighestHp(Vec2 center, float range, Team attacker, int* outIds, int n) const;
 
 private:
 	DynamicArray<Entity*> m_entities{};
+	int m_nextId{ 0 };
 
 	void removeDead();//World determines when to remove
 };

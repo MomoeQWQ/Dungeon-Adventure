@@ -1,9 +1,12 @@
 #include "Player.h"
+#include "Projectile.h"
 #include "../Render/Renderer.h"
 #include "../Game/World.h"
-#include "Projectile.h"
 
-constexpr float kShootCooldown{ 0.8f };
+Projectile* Player::spawnProjectile(const ProjectileDef& def) const 
+{
+	return new Projectile{ getCenter() - def.size * 0.5f,def.size,def.tex,m_facing * def.speed,def.damage,m_team,def.lifetime,getMap(),m_world };
+}
 
 void Player::onUpdate(float dt)
 {
@@ -39,14 +42,29 @@ void Player::onUpdate(float dt)
 		m_world->damageArea(m_range, m_meleeDamage, m_team);
 	}
 
-	//shoot
-	m_shootCooldown -= dt;
+	//in-built timer
+	m_shootCooldown = std::max(0.0f, m_shootCooldown - dt);
+	m_magicCooldown = std::max(0.0f, m_magicCooldown - dt);
 
-	if (m_input->wasPressed('K'))
+	//shoot
+	if (m_input->wasPressed('K')&& m_shootCooldown <= 0.0f)
 	{
-		if (m_shootCooldown <= 0.0001f) {
-			m_world->add(new Projectile{ getCenter() - m_projDef->size * 0.5f,m_projDef->size,m_projDef->tex,m_facing * m_projDef->speed,m_projDef->damage,m_team,m_projDef->lifetime,getMap(),m_world });
+			m_world->add(spawnProjectile(*m_projDef));
 			m_shootCooldown = kShootCooldown;
-		}	
+	}
+
+	//magic
+	if (m_input->wasPressed('L')&& m_magicCooldown <= 0.0f)
+	{
+		int ids[kMagicTargets]{};
+		int count = m_world->selectHighestHp(getCenter(), kMagicRange, m_team, ids, kMagicTargets);
+		for (int i = 0;i < count;i++) 
+		{
+			Projectile* p = spawnProjectile(*m_magicDef);
+			p->setTarget(ids[i]);
+			m_world->add(p);
+		}
+		if (count > 0) 
+			m_magicCooldown = kMagicCooldown;
 	}
 }

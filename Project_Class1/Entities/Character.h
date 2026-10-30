@@ -10,12 +10,13 @@ public:
 	void takeDamage(int damage);
 	void heal(int healValue);
 	bool isDead() const;
-	int getHp() const;
+	int getHp() const override;
 	int getMaxHp() const;
 
 	void update(float dt) override final;
 	bool isInvulnerable() const;
 	void onHit(int damage) override;
+	void draw(Renderer& renderer, const Camera& camera) const override;
 	
 protected:
 	Character(Vec2 pos, Vec2 size, const GamesEngineeringBase::Image* tex, int maxHp, const Tilemap* map)
@@ -36,7 +37,7 @@ private:
 	int m_hp{};
 	int m_maxHp{};
 	const Tilemap* m_map{};
-	float m_invulnTimer{ kInvulnDuration };//born protection
+	float m_invulnTimer{ kInvulnDuration };//born invulnable protection
 
 	virtual void onUpdate(float dt) = 0;//NVI hook
 };

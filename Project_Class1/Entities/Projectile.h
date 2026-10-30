@@ -17,6 +17,7 @@ public:
 		, m_lifetime{lifetime}
 		, m_map{map}
 		, m_world{world}
+		, m_speed{velocity.length()}//we need m_speed to keep speed in magic bullet(direction changes every frame)
 	{
 		assert(map != nullptr && "nullptr map cannot be accepted to create a Projectile!");
 		assert(world != nullptr && "nullptr world cannot be accepted to create a Projectile!");
@@ -24,11 +25,14 @@ public:
 	}
 
 	void update(float dt) override;
+	void setTarget(int id);
 
 private:
+	int m_targetId{ -1 };
 	Vec2 m_velocity{};
 	int m_damage{};
 	float m_lifetime{};
 	const Tilemap* m_map{};
 	World* m_world{};
+	float m_speed{};
 };

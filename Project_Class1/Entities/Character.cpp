@@ -70,3 +70,13 @@ const Tilemap* Character::getMap() const
 {
 	return m_map;
 }
+
+void Character::draw(Renderer& renderer, const Camera& camera) const
+{
+	if (isInvulnerable()) 
+	{
+		if (static_cast<int>(m_invulnTimer * 10) % 2 == 0)
+			return;//blink when invulnerable
+	}
+	Entity::draw(renderer, camera);
+}
