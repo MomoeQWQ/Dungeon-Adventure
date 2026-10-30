@@ -78,6 +78,9 @@
     <ClCompile Include="Entities\Spawner.cpp">
       <Filter>Source Files\Entity</Filter>
     </ClCompile>
+    <ClCompile Include="Entities\Projectile.cpp">
+      <Filter>Source Files\Entity</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GamesEngineeringBase.h">
@@ -134,6 +137,12 @@
     <ClInclude Include="Entities\Spawner.h">
       <Filter>Header Files\Entity</Filter>
     </ClInclude>
+    <ClInclude Include="Entities\Projectile.h">
+      <Filter>Header Files\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="Entities\ProjectileDef.h">
+      <Filter>Header Files\Entity</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\A.png">
@@ -152,6 +161,9 @@
       <Filter>Resource Files\font</Filter>
     </Image>
     <Image Include="Resources\HURT.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\bullet.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

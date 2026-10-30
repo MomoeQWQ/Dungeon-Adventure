@@ -13,6 +13,7 @@
 #include "Entities/EnemyDef.h"
 #include "Entities/Enemy.h"
 #include "Entities/Spawner.h"
+#include "Entities/ProjectileDef.h"
 #include <iostream>
 #include <string>
 
@@ -38,9 +39,11 @@ int main()
 	//texture manager
 	TextureManager tm;
 	tm.load("player", "Resources/IDLE.png");
-	tm.load("spawner", "Resources/HURT.png");
+	tm.load("spawner", "Resources/IDLE.png");
+	tm.load("bullet", "Resources/bullet.png");
 	const GamesEngineeringBase::Image* playerTexPtr = tm.get("player");
 	const GamesEngineeringBase::Image* spawnerTexPtr = tm.get("spawner");
+	const GamesEngineeringBase::Image* bulletTexPtr = tm.get("bullet");
 	if (playerTexPtr == nullptr)
 	{
 		std::cerr << "Failed to load Resources/IDLE.png" << std::endl;
@@ -89,13 +92,23 @@ int main()
 		.speed{ 60 }
 	};
 
+	//create ProjectileDefs
+	ProjectileDef projDef1
+	{
+		.size{ 10.0f,10.0f },
+		.tex{ bulletTexPtr },
+		.speed{ 400.0f },
+		.damage{ 10 },
+		.lifetime{ 0.8f }
+	};
+
 	//create World
 	World world{};
 
 	//create Player
 	Vec2 playerPos{ 96,96 };
 	Vec2 playerSize{ 112,96 };
-	Player* playerPtr = new Player(playerPos, playerSize, playerTexPtr, 100, &map, &input, &world);
+	Player* playerPtr = new Player(playerPos, playerSize, playerTexPtr, 100, &map, &input, &world,&projDef1);
 
 	world.add(playerPtr);
 	world.add(new Spawner(Vec2{ 200.0f,200.0f }, playerSize, spawnerTexPtr, 100 , &map, &world, playerPtr, &def1, 5.0f));
@@ -134,7 +147,7 @@ int main()
 		//draw map
 		map.draw(renderer, camera);
 		
-		//test: drawbound
+		//test: drawbound / draw attck box
 		//Rect bounds = playerPtr->getBounds();
 		//Vec2 leftp = Vec2{ camera.worldToScreen(Vec2{ bounds.x,bounds.y }) };
 		//renderer.drawRect(leftp.x, leftp.y, bounds.w, bounds.h, 255, 0, 0);

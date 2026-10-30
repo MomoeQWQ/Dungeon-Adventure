@@ -3,6 +3,7 @@
 #include "../Game/Input.h"
 #include "../Core/Rect.h"
 #include "../Core/Vec2.h"
+#include "ProjectileDef.h"
 #include <cassert>
 
 class World;
@@ -10,10 +11,11 @@ class World;
 class Player : public Character
 {
 public:
-	Player(Vec2 pos, Vec2 size, const GamesEngineeringBase::Image* tex, int maxHp, const Tilemap* map, const Input* input, World* world)
+	Player(Vec2 pos, Vec2 size, const GamesEngineeringBase::Image* tex, int maxHp, const Tilemap* map, const Input* input, World* world, const ProjectileDef* projDef)
 		:Character{pos,size,tex,maxHp,map}
 		,m_input{input}
 		,m_world{world}
+		,m_projDef{projDef}
 		
 	{
 		assert(input != nullptr && "nullptr input cannot be accepted to create a Player!");
@@ -32,6 +34,9 @@ private:
 	int m_meleeDamage{ 10 };
 	Vec2 m_attackbox{ 40.0f,40.0f };
 	Vec2 m_facing{1.0f,0.0f};
+	const ProjectileDef* m_projDef{};
+	float m_shootCooldown{0.0f};
+
 	static constexpr float kHitboxOffsetX{ 39.0f };
 	static constexpr float kHitboxOffsetY{ 49.0f };
 	static constexpr float kHitboxSizeX{ 31.0f };

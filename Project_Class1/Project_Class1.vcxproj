@@ -144,6 +144,7 @@
     <ClCompile Include="Entities\Enemy.cpp" />
     <ClCompile Include="Entities\Entity.cpp" />
     <ClCompile Include="Entities\Player.cpp" />
+    <ClCompile Include="Entities\Projectile.cpp" />
     <ClCompile Include="Entities\Spawner.cpp" />
     <ClCompile Include="Game\Input.cpp" />
     <ClCompile Include="Game\Tilemap.cpp" />
@@ -164,6 +165,8 @@
     <ClInclude Include="Entities\EnemyDef.h" />
     <ClInclude Include="Entities\Entity.h" />
     <ClInclude Include="Entities\Player.h" />
+    <ClInclude Include="Entities\Projectile.h" />
+    <ClInclude Include="Entities\ProjectileDef.h" />
     <ClInclude Include="Entities\Spawner.h" />
     <ClInclude Include="GamesEngineeringBase.h" />
     <ClInclude Include="Game\Input.h" />
@@ -176,6 +179,7 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\A.png" />
+    <Image Include="Resources\bullet.png" />
     <Image Include="Resources\Font\SweetSunset+SweetSunrise\spritesheets\SweetSunset_bitmap_x1.png" />
     <Image Include="Resources\Font\SweetSunset+SweetSunrise\spritesheets\SweetSunset_bitmap_x2.png" />
     <Image Include="Resources\Font\SweetSunset+SweetSunrise\spritesheets\SweetSunset_bitmap_x2_rgba.png" />
