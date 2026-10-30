@@ -15,6 +15,7 @@ public:
 
 	void update(float dt) override final;
 	bool isInvulnerable() const;
+	void onHit(int damage) override;
 	
 protected:
 	Character(Vec2 pos, Vec2 size, const GamesEngineeringBase::Image* tex, int maxHp, const Tilemap* map)

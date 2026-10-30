@@ -61,6 +61,11 @@ bool Character::isInvulnerable() const
 	return m_invulnTimer > 0.0f;
 }
 
+void Character::onHit(int damage)
+{
+	takeDamage(damage);
+}
+
 const Tilemap* Character::getMap() const
 {
 	return m_map;

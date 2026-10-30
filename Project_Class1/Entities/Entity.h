@@ -5,6 +5,13 @@
 #include "../Render/Camera.h"
 #include "../Core/Rect.h"
 
+enum class Team
+{
+	Neutral = 0,//default
+	Player,
+	Enemy
+};
+
 class Entity
 {
 public:
@@ -23,7 +30,9 @@ public:
 
 	void destroy();
 
+	virtual void onHit(int damage);
 
+	Team getTeam() const;
 
 protected:
 	Entity(Vec2 pos, Vec2 size, const GamesEngineeringBase::Image* tex)
@@ -42,4 +51,5 @@ protected:
 	bool m_isAlive{ true };
 	int m_srcX{0};
 	int m_srcY{0};
+	Team m_team{ Team::Neutral };
 };

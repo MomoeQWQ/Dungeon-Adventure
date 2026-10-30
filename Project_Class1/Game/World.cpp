@@ -52,3 +52,14 @@ void World::removeDead()
 		}
 	}
 }
+
+void World::damageArea(const Rect& area, int damage, Team attacker)
+{
+	for (int i = 0;i < m_entities.getSize();i++) 
+	{
+		if (m_entities[i]->getTeam() != Team::Neutral && m_entities[i]->getTeam() != attacker && m_entities[i]->getBounds().intersects(area)) 
+		{
+			m_entities[i]->onHit(damage);
+		}
+	}
+}

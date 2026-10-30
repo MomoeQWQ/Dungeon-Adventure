@@ -19,6 +19,7 @@ public:
 		assert(target != nullptr &&"nullptr target cannot be used to initialize a Spawner");
 		assert(def != nullptr &&"nullptr def cannot be used to initialize a Spawner");
 		assert(interval > 0.0f && "interval cannot be zero or minus");
+		m_team = Team::Enemy;
 	}
 
 private:

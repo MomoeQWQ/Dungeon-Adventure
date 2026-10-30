@@ -56,10 +56,6 @@ int main()
 	BitmapFont font{};						
 	font.load(tm.load("font","Resources/Font/SweetSunset+SweetSunrise/spritesheets/SweetSunset_bitmap_x2_rgba.png"));
 
-	//create Player
-	Vec2 playerPos{ 96,96 };
-	Vec2 playerSize{ 112,96 };
-	Player* playerPtr = new Player(playerPos, playerSize, playerTexPtr, 100, &map, &input );
 
 	//create EnemyDefs
 	EnemyDef def1 //balanced
@@ -96,6 +92,11 @@ int main()
 	//create World
 	World world{};
 
+	//create Player
+	Vec2 playerPos{ 96,96 };
+	Vec2 playerSize{ 112,96 };
+	Player* playerPtr = new Player(playerPos, playerSize, playerTexPtr, 100, &map, &input, &world);
+
 	world.add(playerPtr);
 	world.add(new Spawner(Vec2{ 200.0f,200.0f }, playerSize, spawnerTexPtr, 100 , &map, &world, playerPtr, &def1, 5.0f));
 	//world.add(new Enemy(Vec2{ 32.0f,32.0f }, &map, playerPtr, def1));
@@ -120,12 +121,6 @@ int main()
 
 		if (dt > 0.05f)
 			dt = 0.05f;
-
-		if (input.wasPressed('J'))
-		{
-			std::cout << "attack!";
-			playerPtr->takeDamage(10);
-		}
 		
 		//movement of player
 		world.update(dt);
@@ -143,6 +138,9 @@ int main()
 		//Rect bounds = playerPtr->getBounds();
 		//Vec2 leftp = Vec2{ camera.worldToScreen(Vec2{ bounds.x,bounds.y }) };
 		//renderer.drawRect(leftp.x, leftp.y, bounds.w, bounds.h, 255, 0, 0);
+		Rect attackBox = playerPtr->m_range;
+		Vec2 leftp = Vec2{ camera.worldToScreen(Vec2{ attackBox.x,attackBox.y }) };
+		renderer.drawRect(leftp.x, leftp.y, attackBox.w, attackBox.h, 255, 0, 0);
 
 		//draw player
 		world.draw(renderer, camera);  

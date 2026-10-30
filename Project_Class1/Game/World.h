@@ -17,7 +17,8 @@ public:
 	void update(float dt);
 	void draw(Renderer&, const Camera&) const;
 	int getCount() const;
-	bool loadfromfile() const;
+	bool loadfromfile() const;//reserved
+	void damageArea(const Rect& area, int damage, Team attacker);
 
 private:
 	DynamicArray<Entity*> m_entities{};

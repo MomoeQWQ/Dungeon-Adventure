@@ -28,3 +28,11 @@ void Entity::destroy()
 {
 	m_isAlive = false;
 }
+
+void Entity::onHit(int damage) 
+{}//default:do nothing
+
+Team Entity::getTeam() const 
+{
+	return m_team;
+}

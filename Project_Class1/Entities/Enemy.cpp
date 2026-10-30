@@ -10,6 +10,7 @@ Enemy::Enemy(Vec2 pos, const Tilemap* map, Character* target, const EnemyDef& de
 	assert(m_target != nullptr && "nullptr target cannot be accepted to create an Enemy!");
 	m_hitboxOffset = def.hitboxOffset;
 	m_hitboxSize = def.hitboxSize;
+	m_team = Team::Enemy;
 }
 
 void Enemy::onUpdate(float dt)
