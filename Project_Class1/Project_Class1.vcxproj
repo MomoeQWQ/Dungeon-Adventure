@@ -170,6 +170,7 @@
     <ClInclude Include="Entities\ProjectileDef.h" />
     <ClInclude Include="Entities\Spawner.h" />
     <ClInclude Include="GamesEngineeringBase.h" />
+    <ClInclude Include="Game\GameState.h" />
     <ClInclude Include="Game\Input.h" />
     <ClInclude Include="Game\Tilemap.h" />
     <ClInclude Include="Game\World.h" />

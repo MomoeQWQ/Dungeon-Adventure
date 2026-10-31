@@ -1,15 +1,16 @@
 #include "GamesEngineeringBase.h"
 #include "Core/DynamicArray.h"
-#include "Game/Input.h"
 #include "Core/Vec2.h"
+#include "Core/FpsCounter.h"
 #include "Render/Renderer.h"
 #include "Render/TextureManager.h"
 #include "Render/Camera.h"
-#include "Entities/Player.h"
+#include "Render/BitmapFont.h"
+#include "Game/Input.h"
 #include "Game/World.h"
 #include "Game/Tilemap.h"
-#include "Render/BitmapFont.h"
-#include "Core/FpsCounter.h"
+#include "Game/GameState.h"
+#include "Entities/Player.h"
 #include "Entities/EnemyDef.h"
 #include "Entities/Enemy.h"
 #include "Entities/Spawner.h"
@@ -18,15 +19,14 @@
 #include <iostream>
 #include <string>
 
+
 int main()
 {
-	bool running{ true };					//set game status running
 	Input input{};							//input
 	GamesEngineeringBase::Window canvas;	//window
 	GamesEngineeringBase::Timer timer;		//timer
 	Renderer renderer{ canvas };			//renderer
 	FpsCounter fpscounter{};				//fpscounter
-
 	Tilemap map{ 64,48,Vec2{32.0f,32.0f} }; //default map
 	if (!map.loadFromFile("Resources/map1.txt"))
 		return 1;                           //load map from file
@@ -74,7 +74,8 @@ int main()
 		.tex{ playerTexPtr },
 		.maxHp{ 30 },
 		.contactDamage{ 10 },
-		.speed{ 100 }
+		.speed{ 100 },
+		.score{ 10 }
 	};
 	EnemyDef def2 //fast but squishy
 	{
@@ -84,7 +85,8 @@ int main()
 		.tex{ playerTexPtr },
 		.maxHp{ 15 },
 		.contactDamage{ 5 },
-		.speed{ 150 }
+		.speed{ 150 },
+		.score {5}
 	};
 	EnemyDef def3 //slow but tanky
 	{
@@ -94,7 +96,8 @@ int main()
 		.tex{ playerTexPtr },
 		.maxHp{ 80 },
 		.contactDamage{ 20 },
-		.speed{ 60 }
+		.speed{ 60 },
+		.score{ 20 }
 	};
 
 	//create ProjectileDefs
@@ -210,69 +213,228 @@ int main()
 	//create World
 	World world{};
 
-	//create Player
-	Vec2 playerPos{ 96,96 };
-	Vec2 enemysize{ 112.0f,96.0f };
-	Player* playerPtr = new Player(playerPos, &map, &input, &world,Mage);
+	//lambda startLevel, so we can avoid passing in too many paras
+	auto startLevel = [&](const HeroDef& hero) -> Player*
+		{
+			world.clear();
+			Player* playerPtr = new Player(Vec2{ 96.0f,96.0f }, & map, & input, & world, hero);
+			world.add(playerPtr);
+			world.add(new Spawner(Vec2{ 800.0f, 300.0f }, Vec2{ 112.0f, 96.0f }, spawnerTexPtr, 100, & map, & world, playerPtr, & def1, 5.0f)); // balanced
+			world.add(new Spawner(Vec2{ 1500.0f, 900.0f }, Vec2{ 112.0f, 96.0f }, spawnerTexPtr, 80, & map, & world, playerPtr, & def2, 4.0f)); // fast
+			world.add(new Spawner(Vec2{ 400.0f, 1200.0f }, Vec2{ 112.0f, 96.0f }, spawnerTexPtr, 150, & map, & world, playerPtr, & def3, 8.0f)); // tanky
+			return playerPtr;
+		};
 
-	world.add(playerPtr);
-	world.add(new Spawner(Vec2{ 200.0f,200.0f }, enemysize, spawnerTexPtr, 100 , &map, &world, playerPtr, &def1, 5.0f));
-	//world.add(new Enemy(Vec2{ 32.0f,32.0f }, &map, playerPtr, def1));
-	//world.add(new Enemy(Vec2{ 32.0f,32.0f }, &map, playerPtr, def2));
-	//world.add(new Enemy(Vec2{ 32.0f,32.0f }, &map, playerPtr, def3));
+	auto drawCentered = [&](const std::string& s, int y)->void
+		{
+			font.drawText(renderer, s, (camera.getScreenWidth() - font.measureText(s)) / 2, y);
+		};
+
+	//player pointer, decided by GameState::Menu now
+	Player* playerPtr = nullptr;
+
+	//set game state
+	GameState state = GameState::Intro;
+	int selectedHero = 0;
+	bool running{ true };//set game state running
+	float elapsed = 0.0f;
+	bool won = false;
+	const char* helpLines[] = 
+	{
+		"CONTROLS",
+		"W A S D  -  move",
+		"J  -  melee attack",
+		"K  -  ranged attack",
+		"L  -  hero skill",
+		"Warrior: damage shield",   
+		"Ranger: speed dash",
+		"Mage : homing magic",
+		"",
+		"GOAL",
+		"Survive 120 seconds to win.",
+		"Destroy spawners to stop enemies.",
+		"",
+		"Press Esc to return"
+	};
+
+	constexpr float kLevelDuration = 120.0f;
+	constexpr int kHeroCount = 3;
+	const HeroDef* heroes[kHeroCount] = { &Warrior, &Ranger, &Mage };
+	const char* heroNames[kHeroCount] = { "Warrior", "Ranger", "Mage" };
 
 	// main loop of the game
 	while (running) 
 	{
-		canvas.checkInput();
+		//get dt
+		float dt = timer.dt();
 
+		//update input
+		canvas.checkInput();
 		input.update(canvas);
 
-		if (input.isDown(VK_ESCAPE))
-		{
-			running = false; // Exits the game loop
-		}
-
-		float dt = timer.dt();
-		//before restrict dt,use raw dt to update fps
-		fpscounter.update(dt);
-
-		if (dt > 0.05f)
-			dt = 0.05f;
-		
-		//movement of player
-		world.update(dt);
-
-		//camera follow and calculate screenCoordinate
-		camera.follow(playerPtr->getCenter());
-		
 		//clear canvas
 		renderer.clear();
 
-		//draw map
-		map.draw(renderer, camera);
-		
-		//test: drawbound / draw attck box
-		//Rect bounds = playerPtr->getBounds();
-		//Vec2 leftp = Vec2{ camera.worldToScreen(Vec2{ bounds.x,bounds.y }) };
-		//renderer.drawRect(leftp.x, leftp.y, bounds.w, bounds.h, 255, 0, 0);
-		Rect attackBox = playerPtr->m_range;
-		Vec2 leftp = Vec2{ camera.worldToScreen(Vec2{ attackBox.x,attackBox.y }) };
-		renderer.drawRect(leftp.x, leftp.y, attackBox.w, attackBox.h, 255, 0, 0);
+		//switch state
+		switch (state) {
+		case GameState::Intro: 
+		{
+			drawCentered("Dungeon Adventure", 250);
+			drawCentered("Press Enter", 400);
+			if (input.wasPressed(VK_RETURN)) 
+			{
+				state = GameState::Menu;
+			}
+			break;
+		}
 
-		//draw player
-		world.draw(renderer, camera);  
+		case GameState::Menu:
+		{
+			int listX = camera.getScreenWidth() / 2 - 60;
+			int startY = 300;
+			int lineH = 60;
+			drawCentered("select your hero:", 200);
+			drawCentered("W/S: select   Enter: start   H: help   Esc: quit", 600);
 
-		//draw fps
-		font.drawText(renderer, "FPS: " + std::to_string(fpscounter.getFps()), camera.getScreenWidth()-font.measureText("FPS: 999")-10, 10);
+			for (int i = 0;i < kHeroCount;i++) {
+				int y = startY + i * lineH;
+				font.drawText(renderer, heroNames[i], listX, y);
+				if (i == selectedHero) 
+				{
+					font.drawText(renderer, ">", listX - 40, y);
+				}
+			}
 
-		//draw Hp bar
-		font.drawText(renderer, "^", 10, 10);
-		renderer.drawRect(font.measureText("^") + 20, (41 - 10) / 2, 200, 30, 105, 105, 105);
-		renderer.drawRect(font.measureText("^") + 20, (41 - 10) / 2, 200 * static_cast<float>(playerPtr->getHp()) / playerPtr->getMaxHp(), 30, 244, 128, 128);
-		font.drawText(renderer, std::to_string(playerPtr->getHp()) + "/" + std::to_string(playerPtr->getMaxHp()), font.measureText("^") + 230, 9);
+			if (input.wasPressed('S'))
+				selectedHero = (selectedHero + 1) % kHeroCount;
 
-		//present the canvas(frame)
+			if (input.wasPressed('W'))
+				selectedHero = (selectedHero + kHeroCount - 1) % kHeroCount;
+
+			if (input.wasPressed('H')) 
+				state = GameState::Help;
+
+			if (input.wasPressed(VK_RETURN))
+			{
+				playerPtr = startLevel(*heroes[selectedHero]);
+				elapsed = 0.0f;
+				state = GameState::Play;
+			}
+				
+			if (input.wasPressed(VK_ESCAPE))
+				running = false;
+
+			break;
+		}
+
+		case GameState::Help: 
+		{
+			for (int i = 0;i < sizeof(helpLines) / sizeof(helpLines[0]); i++)
+			{
+				font.drawText(renderer, helpLines[i], 10, 20 + i * 45);
+			}
+			if (input.wasPressed(VK_ESCAPE))
+			{
+				state = GameState::Menu;
+			}
+			break; 
+		}
+
+		case GameState::Play:
+		{
+			assert(playerPtr != nullptr);
+
+			if (input.wasPressed(VK_ESCAPE))
+			{
+				state = GameState::Menu;
+			}
+
+			//before restrict dt,use raw dt to update fps
+			fpscounter.update(dt);
+
+			if (dt > 0.05f)
+				dt = 0.05f;
+			elapsed += dt;
+
+			//movement of player
+			world.update(dt);
+
+			//camera follow and calculate screenCoordinate
+			camera.follow(playerPtr->getCenter());
+
+			//draw map
+			map.draw(renderer, camera);
+
+			//test: drawbound / draw attck box
+			//Rect bounds = playerPtr->getBounds();
+			//Vec2 leftp = Vec2{ camera.worldToScreen(Vec2{ bounds.x,bounds.y }) };
+			//renderer.drawRect(leftp.x, leftp.y, bounds.w, bounds.h, 255, 0, 0);
+			Rect attackBox = playerPtr->m_range;
+			Vec2 leftp = Vec2{ camera.worldToScreen(Vec2{ attackBox.x,attackBox.y }) };
+			renderer.drawRect(leftp.x, leftp.y, attackBox.w, attackBox.h, 255, 0, 0);
+
+			//draw player
+			world.draw(renderer, camera);
+
+			//draw fps
+			font.drawText(renderer, "FPS: " + std::to_string(fpscounter.getFps()), camera.getScreenWidth() - font.measureText("FPS: 1000") - 10, 10);
+
+			//draw remaining time
+			int remaining = static_cast<int>(kLevelDuration - elapsed);
+			font.drawText(renderer, "Time: " + std::to_string(remaining), camera.getScreenWidth() - font.measureText("Time: 1000") - 10, 40);
+
+			//draw Hp bar
+			font.drawText(renderer, "^", 10, 10);
+			renderer.drawRect(font.measureText("^") + 20, (41 - 10) / 2, 200, 30, 105, 105, 105);
+			renderer.drawRect(font.measureText("^") + 20, (41 - 10) / 2, 200 * static_cast<float>(playerPtr->getHp()) / playerPtr->getMaxHp(), 30, 244, 128, 128);
+			font.drawText(renderer, std::to_string(playerPtr->getHp()) + "/" + std::to_string(playerPtr->getMaxHp()), font.measureText("^") + 230, 9);
+			
+			//draw Score and Kills
+			font.drawText(renderer, "Score: " + std::to_string(world.getScore()), 10, 40);
+			font.drawText(renderer, "Kills: " + std::to_string(world.getKills()), 10, 70);
+
+			//win judgement
+			if(playerPtr->isDead())
+			{
+				won = false;
+				state = GameState::Tally;
+			}
+			else 
+			{
+				if(elapsed >= kLevelDuration)
+				{
+					won = true;
+					state = GameState::Tally;
+				}
+			}
+
+			break;
+		}
+
+		case GameState::Tally: 
+		{ 
+			std::string result = won ? "VICTORY" : "DEFEATED";
+			std::string heroLine = std::string("Hero: ") + heroNames[selectedHero];
+			std::string timeLine = "Time survived: " + std::to_string(static_cast<int>(elapsed)) + " s";
+			std::string killLine = "Kills: " + std::to_string(world.getKills());
+			std::string scoreLine = "Score: " + std::to_string(world.getScore());
+			std::string hint = "Press Enter to return to menu";
+			drawCentered(result, 200);
+			drawCentered(heroLine, 280);
+			drawCentered(timeLine, 330);
+			drawCentered(killLine, 380);
+			drawCentered(scoreLine, 430);
+			drawCentered(hint, 550);
+			if (input.wasPressed(VK_RETURN))
+			{
+				state = GameState::Menu;
+			}
+			break; 
+		}
+
+		}
+
+		//present the frame
 		renderer.present();
 	}
 }

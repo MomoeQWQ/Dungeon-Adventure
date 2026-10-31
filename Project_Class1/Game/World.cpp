@@ -8,10 +8,7 @@ constexpr int MaxtopN = 8;
 
 World::~World()
 {
-	for (int i = 0;i < m_entities.getSize();i++) 
-	{
-		delete m_entities[i];//World in charge of Entities's memory
-	}
+	m_entities.clear();//now function World::clear is in charge of delete
 }
 
 void World::add(Entity* e) 
@@ -49,6 +46,12 @@ void World::removeDead()
 	{
 		if (!m_entities[i]->isAlive()) 
 		{
+			int value = m_entities[i]->getScoreValue();
+			if (value > 0)
+			{
+				m_score += value;
+				m_kills++;
+			}
 			delete m_entities[i];
 			m_entities[i] = m_entities[m_entities.getSize() - 1];
 			m_entities.pop_back();//swap-and-pop,since order doesn't matter here
@@ -136,4 +139,26 @@ int World::selectHighestHp(Vec2 center, float range, Team attacker, int* outIds,
 		outIds[i] = best[i].id;
 	}
 	return count;
+}
+
+void World::clear() 
+{
+	for (int i = 0;i < m_entities.getSize();i++) 
+	{
+		delete m_entities[i];//Class World is in charge of memory'
+		m_entities[i] = nullptr;//for safety
+	}
+	m_entities.clear();
+	m_score = 0;
+	m_kills = 0;
+}
+
+int World::getScore() const 
+{
+	return m_score;
+}
+
+int World::getKills() const 
+{
+	return m_kills;
 }

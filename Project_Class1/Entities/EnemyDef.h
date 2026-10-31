@@ -11,4 +11,5 @@ struct EnemyDef
 	int maxHp{};
 	int contactDamage{};
 	float speed{};
+	int score{};
 };

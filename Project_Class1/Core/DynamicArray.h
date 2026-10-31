@@ -62,6 +62,13 @@ public:
 		std::cout << std::endl;
 	}
 
+	//additional, designed for World::clear
+	//clear, not release, next push_back will overwrite
+	void clear() 
+	{
+		m_size = 0;
+	}
+
 private:
 	T* m_arrayptr{};
 	int m_size{};

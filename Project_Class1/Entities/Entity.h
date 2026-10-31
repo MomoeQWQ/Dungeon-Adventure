@@ -40,6 +40,8 @@ public:
 
 	virtual int getHp() const { return 0; }
 
+	virtual int getScoreValue() const { return 0; }
+
 protected:
 	Entity(Vec2 pos, Vec2 size, const GamesEngineeringBase::Image* tex)
 		:m_position{ pos }

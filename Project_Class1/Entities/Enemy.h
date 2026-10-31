@@ -10,18 +10,22 @@ public:
 		, m_target{ target }
 		, m_speed{ def.speed }
 		, m_contactDamage{ def.contactDamage }
+		, m_score{ def.score }
 	{
 		assert(m_target != nullptr && "nullptr target cannot be accepted to create an Enemy!");
 		m_hitboxOffset = def.hitboxOffset;
 		m_hitboxSize = def.hitboxSize;
 		m_team = Team::Enemy;
 	}
+
 	int getContactDamage() const;
+	int getScoreValue() const override { return m_score; };
 
 private:
 	Character* m_target{};
 	float m_speed{};
 	int m_contactDamage{};
+	int m_score{};
 
 	void onUpdate(float dt) override;
 };
