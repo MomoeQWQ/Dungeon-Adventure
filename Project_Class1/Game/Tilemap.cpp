@@ -5,9 +5,15 @@
 #include <fstream>
 #include <iostream>
 #include <cassert>
+#include <cmath>  
 
 TileType Tilemap::tileAt(int col, int row) const
 {
+	if (m_wrap) 
+	{
+		col = wrapIndex(col, m_col);
+		row = wrapIndex(row, m_row);
+	}
 	if (col < 0 || row < 0 || col>= m_col || row >= m_row)
 		return TileType::Wall;
 	return m_tiles[indexOf(col,row)];
@@ -17,19 +23,21 @@ void Tilemap::draw(Renderer& renderer,const Camera& camera) const
 {
 	float camX = camera.getPosition().x;
 	float camY = camera.getPosition().y;
-	int startX = static_cast<int>(camX / m_tilesize.x) - 1 ;
-	int endX = static_cast<int>((camX + camera.getScreenWidth()) / m_tilesize.x) + 1;
-	int startY = static_cast<int>(camY / m_tilesize.y) - 1;
-	int endY = static_cast<int>((camY+ camera.getScreenHeight()) / m_tilesize.y) + 1;
+	int startX = toCol(camX ) - 1 ;
+	int endX = toCol(camX + camera.getScreenWidth()) + 1;
+	int startY = toRow(camY) - 1;
+	int endY = toRow(camY+ camera.getScreenHeight()) + 1;
 
-	if (startX < 0)
-		startX = 0;
-	if (endX > m_col)
-		endX = m_col;
-	if (startY < 0)
-		startY = 0;
-	if (endY > m_row)
-		endY = m_row;
+	if (!m_wrap) {
+		if (startX < 0)
+			startX = 0;
+		if (endX > m_col)
+			endX = m_col;
+		if (startY < 0)
+			startY = 0;
+		if (endY > m_row)
+			endY = m_row;
+	}
 
 	for (int row = startY;row < endY;row++) 
 	{
@@ -37,7 +45,7 @@ void Tilemap::draw(Renderer& renderer,const Camera& camera) const
 		{
 			Vec2 worldCoord { static_cast<float>(col) * m_tilesize.x ,static_cast<float>(row) * m_tilesize.y };
 			Vec2 screenCoord = camera.worldToScreen(worldCoord);
-			switch (m_tiles[indexOf(col,row)])
+			switch (tileAt(col, row))
 			{
 			case TileType::Wall:
 				if (m_tiletex[static_cast<int>(TileType::Wall)] != nullptr)
@@ -89,13 +97,11 @@ int Tilemap::getPixelHeight() const
 bool Tilemap::isAreaBlocked(const Rect& r) const
 {
 	//use float ,so if the boundary lies exactly on a grid line, the < operator excludes the next cell.
-	float startCol = r.x / m_tilesize.x;
 	float endCol = (r.x + r.w) / m_tilesize.x;
-	float startRow = r.y / m_tilesize.y;
 	float endRow = (r.y + r.h) / m_tilesize.y;
-	for (int row = static_cast<int>(startRow);row < endRow;row++)
+	for (int row = toRow(r.y);row < endRow;row++)
 	{
-		for (int col = static_cast<int>(startCol);col < endCol;col++)
+		for (int col = toCol(r.x);col < endCol;col++)
 		{
 			if (isSolid(tileAt(col, row)))
 				return true;
@@ -147,4 +153,29 @@ void Tilemap::setTileTexture(TileType type, const GamesEngineeringBase::Image* t
 {
 	assert(static_cast<int>(type) >= 0 && static_cast<int>(type) < static_cast<int>(TileType::Count));
 	m_tiletex[static_cast<int>(type)] = tex;
+}
+
+void Tilemap::setWrap(bool wrap)
+{
+	m_wrap = wrap;
+}
+
+bool Tilemap::isWrapping() const
+{
+	return m_wrap;
+}
+
+int Tilemap::wrapIndex(int i, int n) 
+{
+	return ((i % n) + n) % n;
+}
+
+int Tilemap::toCol(float x) const 
+{
+	return static_cast<int>(std::floor(x / m_tilesize.x));
+}
+
+int Tilemap::toRow(float y) const 
+{
+	return static_cast<int>(std::floor(y / m_tilesize.y));
 }

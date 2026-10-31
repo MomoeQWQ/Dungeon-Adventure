@@ -30,7 +30,6 @@ int main()
 	Tilemap map{ 64,48,Vec2{32.0f,32.0f} }; //default map
 	if (!map.loadFromFile("Resources/map1.txt"))
 		return 1;                           //load map from file
-
 	canvas.create(1024, 768, "Example");    //create window
 
 	//Camera init(int worldWidth, int worldHeight,int screenWidth,int screenHeight)
@@ -252,9 +251,15 @@ int main()
 	World world{};
 
 	//lambda startLevel, so we can avoid passing in too many paras
-	auto startLevel = [&](const HeroDef& hero) -> Player*
+	auto startLevel = [&](const HeroDef& hero, int level) -> Player*
 		{
 			world.clear();
+			bool endless = (level == 1);
+			if (!map.loadFromFile(endless ? "Resources/map2.txt" : "Resources/map1.txt"))
+				std::cerr << "load map failure!";
+			map.setWrap(endless);
+			camera.setClamp(!endless);
+
 			Player* playerPtr = new Player(Vec2{ 96.0f,96.0f }, & map, & input, & world, hero);
 			world.add(playerPtr);
 			world.add(new Spawner(Vec2{ 800.0f, 300.0f }, Vec2{ 112.0f, 96.0f }, spawnerNewTexPtr, 100, & map, & world, playerPtr, & def1, 5.0f)); // balanced
@@ -274,6 +279,7 @@ int main()
 	//set game state
 	GameState state = GameState::Intro;
 	int selectedHero = 0;
+	int selectedLevel = 0;
 	bool running{ true };//set game state running
 	float elapsed = 0.0f;
 	bool won = false;
@@ -299,6 +305,7 @@ int main()
 	constexpr int kHeroCount = 3;
 	const HeroDef* heroes[kHeroCount] = { &Warrior, &Ranger, &Mage };
 	const char* heroNames[kHeroCount] = { "Warrior", "Ranger", "Mage" };
+	const char* levelNames[2] = { "Fixed", "Endless" };
 
 	// main loop of the game
 	while (running) 
@@ -332,7 +339,7 @@ int main()
 			int startY = 300;
 			int lineH = 60;
 			drawCentered("select your hero:", 200);
-			drawCentered("W/S: select   Enter: start   H: help   Esc: quit", 600);
+			drawCentered("W/S: select   A/D： level   Enter: start   H: help   Esc: quit", 600);
 
 			for (int i = 0;i < kHeroCount;i++) {
 				int y = startY + i * lineH;
@@ -343,18 +350,26 @@ int main()
 				}
 			}
 
+			drawCentered(std::string("Level: < ") + levelNames[selectedLevel] + " >", startY + kHeroCount * lineH + 30);
+
 			if (input.wasPressed('S'))
 				selectedHero = (selectedHero + 1) % kHeroCount;
 
 			if (input.wasPressed('W'))
 				selectedHero = (selectedHero + kHeroCount - 1) % kHeroCount;
 
+			if (input.wasPressed('A'))
+				selectedLevel = 1 - selectedLevel;
+
+			if (input.wasPressed('D'))
+				selectedLevel = 1 - selectedLevel;
+
 			if (input.wasPressed('H')) 
 				state = GameState::Help;
 
 			if (input.wasPressed(VK_RETURN))
 			{
-				playerPtr = startLevel(*heroes[selectedHero]);
+				playerPtr = startLevel(*heroes[selectedHero], selectedLevel);
 				elapsed = 0.0f;
 				state = GameState::Play;
 			}

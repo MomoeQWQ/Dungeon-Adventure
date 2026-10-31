@@ -16,6 +16,7 @@ public:
 	Vec2 getPosition() const;
 	int getScreenWidth() const;
 	int getScreenHeight() const;
+	void setClamp(bool);
 
 private:
 	Vec2 m_position{};//top-left point of the screen
@@ -23,5 +24,6 @@ private:
 	int m_worldHeight{};
 	int m_screenWidth{};
 	int m_screenHeight{};
+	bool m_clamp{ true };
 };
 
