@@ -4,6 +4,7 @@
 #include "../Core/DynamicArray.h"
 #include <fstream>
 #include <iostream>
+#include <cassert>
 
 TileType Tilemap::tileAt(int col, int row) const
 {
@@ -39,10 +40,16 @@ void Tilemap::draw(Renderer& renderer,const Camera& camera) const
 			switch (m_tiles[indexOf(col,row)])
 			{
 			case TileType::Wall:
+				if (m_tiletex[static_cast<int>(TileType::Wall)] != nullptr)
+					renderer.drawImage(*m_tiletex[static_cast<int>(TileType::Wall)], static_cast<int>(screenCoord.x), static_cast<int>(screenCoord.y));
+				else
 				renderer.drawRect( static_cast<int>(screenCoord.x), static_cast<int>(screenCoord.y), static_cast<int>(m_tilesize.x), static_cast<int>(m_tilesize.y)
 					, 0, 0, 0);
 				break;
 			case TileType::Road:
+				if (m_tiletex[static_cast<int>(TileType::Road)] != nullptr)
+					renderer.drawImage(*m_tiletex[static_cast<int>(TileType::Road)], static_cast<int>(screenCoord.x), static_cast<int>(screenCoord.y));
+				else
 				renderer.drawRect( static_cast<int>(screenCoord.x), static_cast<int>(screenCoord.y), static_cast<int>(m_tilesize.x), static_cast<int>(m_tilesize.y)
 					, 255, 255, 255);
 				break;
@@ -134,4 +141,10 @@ bool Tilemap::loadFromFile(const std::string& path)
 	m_col = fCol;
 	m_tiles = temp;
 	return true;
+}
+
+void Tilemap::setTileTexture(TileType type, const GamesEngineeringBase::Image* tex) 
+{
+	assert(static_cast<int>(type) >= 0 && static_cast<int>(type) < static_cast<int>(TileType::Count));
+	m_tiletex[static_cast<int>(type)] = tex;
 }

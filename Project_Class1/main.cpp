@@ -40,13 +40,52 @@ int main()
 	//texture manager
 	TextureManager tm;
 	tm.load("player", "Resources/IDLE.png");
-	tm.load("spawner", "Resources/IDLE.png");
 	tm.load("bullet", "Resources/bullet.png");
 	tm.load("magicbullet", "Resources/magic.png");
+	tm.load("enemy_balanced", "Resources/enemy_balanced.png");
+	tm.load("enemy_fast", "Resources/enemy_fast.png");
+	tm.load("enemy_tank", "Resources/enemy_tank.png");
+	tm.load("spawner_new", "Resources/spawner.png");
+	tm.load("hero_warrior", "Resources/hero_warrior.png");
+	tm.load("hero_ranger", "Resources/hero_ranger.png");
+	tm.load("hero_mage", "Resources/hero_mage.png");
+	tm.load("tile_floor", "Resources/tile_floor.png");
+	tm.load("tile_wall", "Resources/tile_wall.png");
+	tm.load("enemy_bullet", "Resources/enemy_bullet.png");
+	tm.load("potion_hp", "Resources/potion_hp.png");
+	tm.load("potion_mp", "Resources/potion_mp.png");
+	tm.load("key", "Resources/key.png");
+	tm.load("door_closed", "Resources/door_closed.png");
+	tm.load("door_open", "Resources/door_open.png");
+	tm.load("trap_spikes", "Resources/trap_spikes.png");
+	tm.load("trap_turret", "Resources/trap_turret.png");
+	tm.load("switch_off", "Resources/switch_off.png");
+	tm.load("switch_on", "Resources/switch_on.png");
+	tm.load("help_button", "Resources/help_button.png");
+
 	const GamesEngineeringBase::Image* playerTexPtr = tm.get("player");
-	const GamesEngineeringBase::Image* spawnerTexPtr = tm.get("spawner");
 	const GamesEngineeringBase::Image* bulletTexPtr = tm.get("bullet");
 	const GamesEngineeringBase::Image* magicTexPtr = tm.get("magicbullet");
+	const GamesEngineeringBase::Image* enemyBalancedTexPtr = tm.get("enemy_balanced");
+	const GamesEngineeringBase::Image* enemyFastTexPtr = tm.get("enemy_fast");
+	const GamesEngineeringBase::Image* enemyTankTexPtr = tm.get("enemy_tank");
+	const GamesEngineeringBase::Image* spawnerNewTexPtr = tm.get("spawner_new");
+	const GamesEngineeringBase::Image* warriorTexPtr = tm.get("hero_warrior");
+	const GamesEngineeringBase::Image* rangerTexPtr = tm.get("hero_ranger");
+	const GamesEngineeringBase::Image* mageTexPtr = tm.get("hero_mage");
+	const GamesEngineeringBase::Image* floorTexPtr = tm.get("tile_floor");
+	const GamesEngineeringBase::Image* wallTexPtr = tm.get("tile_wall");
+	const GamesEngineeringBase::Image* enemyBulletTexPtr = tm.get("enemy_bullet");
+	const GamesEngineeringBase::Image* potionHpTexPtr = tm.get("potion_hp");
+	const GamesEngineeringBase::Image* potionMpTexPtr = tm.get("potion_mp");
+	const GamesEngineeringBase::Image* keyTexPtr = tm.get("key");
+	const GamesEngineeringBase::Image* doorClosedTexPtr = tm.get("door_closed");
+	const GamesEngineeringBase::Image* doorOpenTexPtr = tm.get("door_open");
+	const GamesEngineeringBase::Image* trapSpikesTexPtr = tm.get("trap_spikes");
+	const GamesEngineeringBase::Image* trapTurretTexPtr = tm.get("trap_turret");
+	const GamesEngineeringBase::Image* switchOffTexPtr = tm.get("switch_off");
+	const GamesEngineeringBase::Image* switchOnTexPtr = tm.get("switch_on");
+	const GamesEngineeringBase::Image* helpButtonTexPtr = tm.get("help_button");
 
 	//Tex load check
 	if (playerTexPtr == nullptr)
@@ -54,11 +93,10 @@ int main()
 		std::cerr << "Failed to load Resources/IDLE.png" << std::endl;
 		return 1;
 	}
-	if (spawnerTexPtr == nullptr)
-	{
-		std::cerr << "Failed to load Resources/HURT.png" << std::endl;
-		return 1;
-	}
+
+	//load map Tex
+	map.setTileTexture(TileType::Wall, wallTexPtr);
+	map.setTileTexture(TileType::Road, floorTexPtr);
 
 	//load font
 	BitmapFont font{};						
@@ -71,7 +109,7 @@ int main()
 		.size{ 112.0f,96.0f },
 		.hitboxOffset{ 39.0f,49.0f },
 		.hitboxSize{ 31.0f,37.0f },
-		.tex{ playerTexPtr },
+		.tex{ enemyBalancedTexPtr },
 		.maxHp{ 30 },
 		.contactDamage{ 10 },
 		.speed{ 100 },
@@ -82,7 +120,7 @@ int main()
 		.size{ 112.0f,96.0f },
 		.hitboxOffset{ 39.0f,49.0f },
 		.hitboxSize{ 31.0f,37.0f },
-		.tex{ playerTexPtr },
+		.tex{ enemyFastTexPtr },
 		.maxHp{ 15 },
 		.contactDamage{ 5 },
 		.speed{ 150 },
@@ -93,7 +131,7 @@ int main()
 		.size{ 112.0f,96.0f },
 		.hitboxOffset{ 39.0f,49.0f },
 		.hitboxSize{ 31.0f,37.0f },
-		.tex{ playerTexPtr },
+		.tex{ enemyTankTexPtr },
 		.maxHp{ 80 },
 		.contactDamage{ 20 },
 		.speed{ 60 },
@@ -144,7 +182,7 @@ int main()
 		.size{ 112.0f,96.0f },
 		.hitboxOffset{ 39.0f,49.0f },
 		.hitboxSize{ 31.0f,37.0f },
-		.tex{ playerTexPtr },
+		.tex{ warriorTexPtr },
 		.maxHp{ 150 },
 		.speed{ 180 },
 		//J
@@ -167,7 +205,7 @@ int main()
 		.size{ 112.0f,96.0f },
 		.hitboxOffset{ 39.0f,49.0f },
 		.hitboxSize{ 31.0f,37.0f },
-		.tex{ playerTexPtr },
+		.tex{ rangerTexPtr },
 		.maxHp{ 90 },
 		.speed{ 230 },
 		//J
@@ -190,7 +228,7 @@ int main()
 		.size{ 112.0f,96.0f },
 		.hitboxOffset{ 39.0f,49.0f },
 		.hitboxSize{ 31.0f,37.0f },
-		.tex{ playerTexPtr },
+		.tex{ mageTexPtr },
 		.maxHp{ 80 },
 		.speed{ 200 },
 		//J
@@ -219,9 +257,9 @@ int main()
 			world.clear();
 			Player* playerPtr = new Player(Vec2{ 96.0f,96.0f }, & map, & input, & world, hero);
 			world.add(playerPtr);
-			world.add(new Spawner(Vec2{ 800.0f, 300.0f }, Vec2{ 112.0f, 96.0f }, spawnerTexPtr, 100, & map, & world, playerPtr, & def1, 5.0f)); // balanced
-			world.add(new Spawner(Vec2{ 1500.0f, 900.0f }, Vec2{ 112.0f, 96.0f }, spawnerTexPtr, 80, & map, & world, playerPtr, & def2, 4.0f)); // fast
-			world.add(new Spawner(Vec2{ 400.0f, 1200.0f }, Vec2{ 112.0f, 96.0f }, spawnerTexPtr, 150, & map, & world, playerPtr, & def3, 8.0f)); // tanky
+			world.add(new Spawner(Vec2{ 800.0f, 300.0f }, Vec2{ 112.0f, 96.0f }, spawnerNewTexPtr, 100, & map, & world, playerPtr, & def1, 5.0f)); // balanced
+			world.add(new Spawner(Vec2{ 1500.0f, 900.0f }, Vec2{ 112.0f, 96.0f }, spawnerNewTexPtr, 80, & map, & world, playerPtr, & def2, 4.0f)); // fast
+			world.add(new Spawner(Vec2{ 400.0f, 1200.0f }, Vec2{ 112.0f, 96.0f }, spawnerNewTexPtr, 150, & map, & world, playerPtr, & def3, 8.0f)); // tanky
 			return playerPtr;
 		};
 

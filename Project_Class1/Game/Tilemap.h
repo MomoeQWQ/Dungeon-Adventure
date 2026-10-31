@@ -1,10 +1,12 @@
 #pragma once
+#include "../GamesEngineeringBase.h"
 #include "../Core/DynamicArray.h"
 #include "../Core/Vec2.h"
 #include "../Core/Rect.h"
 
 class Renderer;
 class Camera;
+
 enum class TileType 
 {
 	Wall = 0,
@@ -41,11 +43,13 @@ public:
 	int getPixelHeight() const;
 	bool isAreaBlocked(const Rect& r) const;
 	bool loadFromFile(const std::string& path);
+	void setTileTexture(TileType type, const GamesEngineeringBase::Image* tex);
 
 private:
 	int m_col{64};
 	int m_row{48};
 	Vec2 m_tilesize{32.0f,32.0f};
+	const GamesEngineeringBase::Image* m_tiletex[static_cast<int>(TileType::Count)]{nullptr};
 
 	DynamicArray<TileType> m_tiles{};
 	int indexOf(int col, int row) const;

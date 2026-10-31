@@ -175,6 +175,66 @@
     <Image Include="Resources\magic.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="Resources\door_closed.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\door_open.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\enemy_balanced.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\enemy_bullet.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\enemy_fast.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\enemy_tank.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\help_button.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\hero_mage.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\hero_ranger.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\hero_warrior.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\key.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\potion_hp.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\potion_mp.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\spawner.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\switch_off.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\switch_on.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\tile_floor.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\tile_wall.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\trap_spikes.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\trap_turret.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Media Include="Resources\explosion.wav">
@@ -183,5 +243,37 @@
     <Media Include="Resources\music.wav">
       <Filter>Resource Files</Filter>
     </Media>
+    <Media Include="Resources\music_battle.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="Resources\music_menu.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="Resources\sfx_door.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="Resources\sfx_enemy_die.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="Resources\sfx_hurt.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="Resources\sfx_magic.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="Resources\sfx_melee.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="Resources\sfx_pickup.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="Resources\sfx_shoot.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Resources\map1.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>

@@ -182,16 +182,48 @@
   <ItemGroup>
     <Image Include="Resources\A.png" />
     <Image Include="Resources\bullet.png" />
+    <Image Include="Resources\door_closed.png" />
+    <Image Include="Resources\door_open.png" />
+    <Image Include="Resources\enemy_balanced.png" />
+    <Image Include="Resources\enemy_bullet.png" />
+    <Image Include="Resources\enemy_fast.png" />
+    <Image Include="Resources\enemy_tank.png" />
     <Image Include="Resources\Font\SweetSunset+SweetSunrise\spritesheets\SweetSunset_bitmap_x1.png" />
     <Image Include="Resources\Font\SweetSunset+SweetSunrise\spritesheets\SweetSunset_bitmap_x2.png" />
     <Image Include="Resources\Font\SweetSunset+SweetSunrise\spritesheets\SweetSunset_bitmap_x2_rgba.png" />
+    <Image Include="Resources\help_button.png" />
+    <Image Include="Resources\hero_mage.png" />
+    <Image Include="Resources\hero_ranger.png" />
+    <Image Include="Resources\hero_warrior.png" />
     <Image Include="Resources\HURT.png" />
     <Image Include="Resources\IDLE.png" />
+    <Image Include="Resources\key.png" />
     <Image Include="Resources\magic.png" />
+    <Image Include="Resources\potion_hp.png" />
+    <Image Include="Resources\potion_mp.png" />
+    <Image Include="Resources\spawner.png" />
+    <Image Include="Resources\switch_off.png" />
+    <Image Include="Resources\switch_on.png" />
+    <Image Include="Resources\tile_floor.png" />
+    <Image Include="Resources\tile_wall.png" />
+    <Image Include="Resources\trap_spikes.png" />
+    <Image Include="Resources\trap_turret.png" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="Resources\explosion.wav" />
     <Media Include="Resources\music.wav" />
+    <Media Include="Resources\music_battle.wav" />
+    <Media Include="Resources\music_menu.wav" />
+    <Media Include="Resources\sfx_door.wav" />
+    <Media Include="Resources\sfx_enemy_die.wav" />
+    <Media Include="Resources\sfx_hurt.wav" />
+    <Media Include="Resources\sfx_magic.wav" />
+    <Media Include="Resources\sfx_melee.wav" />
+    <Media Include="Resources\sfx_pickup.wav" />
+    <Media Include="Resources\sfx_shoot.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Resources\map1.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
