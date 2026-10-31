@@ -7,6 +7,7 @@ void Character::takeDamage(int damage)
 	assert(damage >= 0 && "a minus damage cannot be applied!");
 	if (m_invulnTimer > 0)
 		return;//character is in i-frames
+	damage = static_cast<int>(damage * m_damageScale);
 	m_hp -= damage;
 	m_hp = std::clamp(m_hp, 0, m_maxHp);
 	m_invulnTimer = kInvulnDuration;
@@ -79,4 +80,9 @@ void Character::draw(Renderer& renderer, const Camera& camera) const
 			return;//blink when invulnerable
 	}
 	Entity::draw(renderer, camera);
+}
+
+void Character::setDamageScale(float scale)
+{
+	m_damageScale = scale;
 }

@@ -143,6 +143,9 @@
     <ClInclude Include="Entities\ProjectileDef.h">
       <Filter>Header Files\Entity</Filter>
     </ClInclude>
+    <ClInclude Include="Entities\HeroDef.h">
+      <Filter>Header Files\Entity</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\A.png">

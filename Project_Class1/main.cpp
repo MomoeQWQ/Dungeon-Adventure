@@ -14,6 +14,7 @@
 #include "Entities/Enemy.h"
 #include "Entities/Spawner.h"
 #include "Entities/ProjectileDef.h"
+#include "Entities/HeroDef.h"
 #include <iostream>
 #include <string>
 
@@ -46,6 +47,8 @@ int main()
 	const GamesEngineeringBase::Image* spawnerTexPtr = tm.get("spawner");
 	const GamesEngineeringBase::Image* bulletTexPtr = tm.get("bullet");
 	const GamesEngineeringBase::Image* magicTexPtr = tm.get("magicbullet");
+
+	//Tex load check
 	if (playerTexPtr == nullptr)
 	{
 		std::cerr << "Failed to load Resources/IDLE.png" << std::endl;
@@ -95,17 +98,35 @@ int main()
 	};
 
 	//create ProjectileDefs
-	ProjectileDef projDef1
+	ProjectileDef bulletDef_warrior
+	{
+		.size{ 12.0f,12.0f },
+		.tex{ bulletTexPtr },
+		.speed{ 350.0f },
+		.damage{ 5 },
+		.lifetime{ 0.8f }
+	};
+
+	ProjectileDef bulletDef_ranger
+	{
+		.size{ 12.0f,12.0f },
+		.tex{ bulletTexPtr },
+		.speed{ 600.0f },
+		.damage{ 12 },
+		.lifetime{ 1.2f }
+	};
+
+	ProjectileDef bulletDef_mage
 	{
 		.size{ 12.0f,12.0f },
 		.tex{ bulletTexPtr },
 		.speed{ 400.0f },
-		.damage{ 10 },
-		.lifetime{ 0.8f }
+		.damage{ 15 },
+		.lifetime{ 1.5f }
 	};
 
 	//create MagicDefs
-	ProjectileDef magicDef1
+	ProjectileDef magicDef_mage
 	{
 		.size{ 20.0f,20.0f },
 		.tex{ magicTexPtr },
@@ -114,16 +135,88 @@ int main()
 		.lifetime{ 3.0f }
 	};
 
+	//create Herodefs
+	HeroDef Warrior
+	{
+		.size{ 112.0f,96.0f },
+		.hitboxOffset{ 39.0f,49.0f },
+		.hitboxSize{ 31.0f,37.0f },
+		.tex{ playerTexPtr },
+		.maxHp{ 150 },
+		.speed{ 180 },
+		//J
+		.meleeDamage{ 25 },
+		.meleeBox{ 56.0f,56.0f },
+		.meleeCooldown{ 0.4f },
+		//K
+		.shot{ &bulletDef_warrior },
+		.shootCooldown{ 0.8f },
+		//L
+		.skill{ SkillType::Defence },
+		.skillCooldown{ 8.0f },
+		.skillDuration{ 4.0f },
+		.skillMagnitude{ 0.5f },
+		.magic{ nullptr }
+	};
+
+	HeroDef Ranger
+	{
+		.size{ 112.0f,96.0f },
+		.hitboxOffset{ 39.0f,49.0f },
+		.hitboxSize{ 31.0f,37.0f },
+		.tex{ playerTexPtr },
+		.maxHp{ 90 },
+		.speed{ 230 },
+		//J
+		.meleeDamage{ 8 },
+		.meleeBox{ 36.0f,36.0f },
+		.meleeCooldown{ 0.5f },
+		//K
+		.shot{ &bulletDef_ranger },
+		.shootCooldown{ 0.25f },
+		//L
+		.skill{ SkillType::Speed },
+		.skillCooldown{ 6.0f },
+		.skillDuration{ 3.0f },
+		.skillMagnitude{ 2.0f },
+		.magic{ nullptr }
+	};
+
+	HeroDef Mage
+	{
+		.size{ 112.0f,96.0f },
+		.hitboxOffset{ 39.0f,49.0f },
+		.hitboxSize{ 31.0f,37.0f },
+		.tex{ playerTexPtr },
+		.maxHp{ 80 },
+		.speed{ 200 },
+		//J
+		.meleeDamage{ 6 },
+		.meleeBox{ 36.0f,36.0f },
+		.meleeCooldown{ 0.6f },
+		//K
+		.shot{ &bulletDef_mage },
+		.shootCooldown{ 0.5f },
+		//L
+		.skill{ SkillType::Magic },
+		.skillCooldown{ 3.0f },
+		.skillDuration{ 0.0f },
+		.skillMagnitude{ 0 },
+		.magic{ &magicDef_mage }
+	};
+
+	//since we use def in entities, def should be created before world
+
 	//create World
 	World world{};
 
 	//create Player
 	Vec2 playerPos{ 96,96 };
-	Vec2 playerSize{ 112,96 };
-	Player* playerPtr = new Player(playerPos, playerSize, playerTexPtr, 100, &map, &input, &world, &projDef1, &magicDef1);
+	Vec2 enemysize{ 112.0f,96.0f };
+	Player* playerPtr = new Player(playerPos, &map, &input, &world,Mage);
 
 	world.add(playerPtr);
-	world.add(new Spawner(Vec2{ 200.0f,200.0f }, playerSize, spawnerTexPtr, 100 , &map, &world, playerPtr, &def1, 5.0f));
+	world.add(new Spawner(Vec2{ 200.0f,200.0f }, enemysize, spawnerTexPtr, 100 , &map, &world, playerPtr, &def1, 5.0f));
 	//world.add(new Enemy(Vec2{ 32.0f,32.0f }, &map, playerPtr, def1));
 	//world.add(new Enemy(Vec2{ 32.0f,32.0f }, &map, playerPtr, def2));
 	//world.add(new Enemy(Vec2{ 32.0f,32.0f }, &map, playerPtr, def3));
@@ -179,6 +272,7 @@ int main()
 		renderer.drawRect(font.measureText("^") + 20, (41 - 10) / 2, 200 * static_cast<float>(playerPtr->getHp()) / playerPtr->getMaxHp(), 30, 244, 128, 128);
 		font.drawText(renderer, std::to_string(playerPtr->getHp()) + "/" + std::to_string(playerPtr->getMaxHp()), font.measureText("^") + 230, 9);
 
+		//present the canvas(frame)
 		renderer.present();
 	}
 }

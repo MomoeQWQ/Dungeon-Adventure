@@ -31,6 +31,7 @@ protected:
 
 	void moveWithCollision(Vec2 delta);//shared by Player and Enemy
 	const Tilemap* getMap() const;
+	void setDamageScale(float);
 
 private:
 	static constexpr float kInvulnDuration{ 0.8f };
@@ -38,6 +39,7 @@ private:
 	int m_maxHp{};
 	const Tilemap* m_map{};
 	float m_invulnTimer{ kInvulnDuration };//born invulnable protection
+	float m_damageScale{ 1.0f };
 
 	virtual void onUpdate(float dt) = 0;//NVI hook
 };
