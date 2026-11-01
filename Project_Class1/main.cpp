@@ -486,7 +486,7 @@ int main()
 		}
 
 		}
-
+		  
 		//present the frame
 		renderer.present();
 	}
