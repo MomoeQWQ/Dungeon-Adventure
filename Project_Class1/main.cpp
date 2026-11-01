@@ -339,7 +339,7 @@ int main()
 			int startY = 300;
 			int lineH = 60;
 			drawCentered("select your hero:", 200);
-			drawCentered("W/S: select   A/D： level   Enter: start   H: help   Esc: quit", 600);
+			drawCentered("W/S: select   A/D: level   Enter: start   H: help   Esc: quit", 600);
 
 			for (int i = 0;i < kHeroCount;i++) {
 				int y = startY + i * lineH;
