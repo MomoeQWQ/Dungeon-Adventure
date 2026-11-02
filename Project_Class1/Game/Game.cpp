@@ -1,4 +1,5 @@
 #include "Game.h"
+#include "../Entities/Turret.h"
 #include <cassert>
 
 namespace 
@@ -139,6 +140,16 @@ void Game::setupDefs()
 		.lifetime{ 3.0f }
 	};
 
+	//create enemy's shot
+	m_enemyShotDef = ProjectileDef
+	{
+		.size{ 12.0f,12.0f },
+		.tex{ m_tm.get("enemy_bullet") },
+		.speed{ 250.0f },
+		.damage{ 8 },
+		.lifetime{ 3.0f }
+	};
+
 	//create Herodefs
 	m_heroDefs[0] = HeroDef
 	{
@@ -208,6 +219,7 @@ void Game::setupDefs()
 		.skillMagnitude{ 0 },
 		.magic{ &m_magicDef }
 	};
+
 }
 
 Player* Game::startLevel(const HeroDef& hero, int level)
@@ -224,6 +236,7 @@ Player* Game::startLevel(const HeroDef& hero, int level)
 	m_world.add(new Spawner(Vec2{ 800.0f, 300.0f }, Vec2{ 112.0f, 96.0f }, m_tm.get("spawner_new"), 100, &m_map, &m_world, playerPtr, &m_enemyDefs[0], 5.0f)); // balanced
 	m_world.add(new Spawner(Vec2{ 1500.0f, 900.0f }, Vec2{ 112.0f, 96.0f }, m_tm.get("spawner_new"), 80, &m_map, &m_world, playerPtr, &m_enemyDefs[1], 4.0f)); // fast
 	m_world.add(new Spawner(Vec2{ 400.0f, 1200.0f }, Vec2{ 112.0f, 96.0f }, m_tm.get("spawner_new"), 150, &m_map, &m_world, playerPtr, &m_enemyDefs[2], 8.0f)); // tanky
+	m_world.add(new Turret(Vec2{ 300.0f,300.0f }, Vec2{ 32.0f, 32.0f }, m_tm.get("trap_turret"), 60, &m_map, &m_world, &m_enemyShotDef, 1.5, 160000, playerPtr->getId()));
 	return playerPtr;
 };
 

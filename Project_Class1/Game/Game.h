@@ -59,7 +59,9 @@ private:
 	ProjectileDef m_shotDefs[3]; 
 	ProjectileDef m_magicDef; 
 	HeroDef m_heroDefs[kHeroCount];
+	ProjectileDef m_enemyShotDef{};
 
+	//world must be defined after def, cuz we have pointers linked to entities in def
 	World m_world{};
 
 	//Game
