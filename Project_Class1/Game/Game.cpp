@@ -72,7 +72,7 @@ void Game::setupDefs()
 		.size{ 112.0f,96.0f },
 		.hitboxOffset{ 39.0f,49.0f },
 		.hitboxSize{ 31.0f,37.0f },
-		.tex{ m_tm.get("enenmy_balanced") },
+		.tex{ m_tm.get("enemy_balanced") },
 		.maxHp{ 30 },
 		.contactDamage{ 10 },
 		.speed{ 100 },
@@ -83,7 +83,7 @@ void Game::setupDefs()
 		.size{ 112.0f,96.0f },
 		.hitboxOffset{ 39.0f,49.0f },
 		.hitboxSize{ 31.0f,37.0f },
-		.tex{ m_tm.get("enenmy_fast") },
+		.tex{ m_tm.get("enemy_fast") },
 		.maxHp{ 15 },
 		.contactDamage{ 5 },
 		.speed{ 150 },
@@ -94,7 +94,7 @@ void Game::setupDefs()
 		.size{ 112.0f,96.0f },
 		.hitboxOffset{ 39.0f,49.0f },
 		.hitboxSize{ 31.0f,37.0f },
-		.tex{ m_tm.get("enenmy_tank") },
+		.tex{ m_tm.get("enemy_tank") },
 		.maxHp{ 80 },
 		.contactDamage{ 20 },
 		.speed{ 60 },
@@ -199,7 +199,7 @@ void Game::setupDefs()
 		.meleeBox{ 36.0f,36.0f },
 		.meleeCooldown{ 0.6f },
 		//K
-		.shot{ &m_shotDefs[1] },
+		.shot{ &m_shotDefs[2] },
 		.shootCooldown{ 0.5f },
 		//L
 		.skill{ SkillType::Magic },
@@ -208,7 +208,6 @@ void Game::setupDefs()
 		.skillMagnitude{ 0 },
 		.magic{ &m_magicDef }
 	};
-
 }
 
 Player* Game::startLevel(const HeroDef& hero, int level)
@@ -253,11 +252,12 @@ void Game::drawHud()
 	m_font.drawText(m_renderer, "Kills: " + std::to_string(m_world.getKills()), 10, 70);
 }
 
+//init the game:read from files, create window, refresh camera, load tex, create entities' defs
 bool Game::init() 
 {
 	//load map from file
 	if (!m_map.loadFromFile("Resources/map1.txt"))
-		return 1;
+		return false;
 
 	//create window
 	m_canvas.create(1024, 768, "Dungeon Adventure");    
@@ -270,6 +270,8 @@ bool Game::init()
 
 	//create defs
 	setupDefs();
+
+	return true;
 }
 
 
@@ -369,9 +371,9 @@ void Game::updatePlay(float dt)
 	//Rect bounds = playerPtr->getBounds();
 	//Vec2 leftp = Vec2{ camera.worldToScreen(Vec2{ bounds.x,bounds.y }) };
 	//renderer.drawRect(leftp.x, leftp.y, bounds.w, bounds.h, 255, 0, 0);
-	Rect attackBox = m_player->m_range;
-	Vec2 leftp = Vec2{ m_camera.worldToScreen(Vec2{ attackBox.x,attackBox.y }) };
-	m_renderer.drawRect(leftp.x, leftp.y, attackBox.w, attackBox.h, 255, 0, 0);
+	//Rect attackBox = m_player->m_range;
+	//Vec2 leftp = Vec2{ m_camera.worldToScreen(Vec2{ attackBox.x,attackBox.y }) };
+	//m_renderer.drawRect(leftp.x, leftp.y, attackBox.w, attackBox.h, 255, 0, 0);
 
 	//draw player
 	m_world.draw(m_renderer, m_camera);
@@ -416,17 +418,14 @@ void Game::updateTally()
 }
 
 
-// main loop of the game
+//main loop,including checking inputs, cal dt/fps, clear/draw, game state switch and update
 void Game::run()
 {
+	// main loop of the game
 	while (m_running)
 	{
 		//get dt
 		float dt = m_timer.dt();
-
-		//draw fps(we need fps throughout the game, so it in not included in the function drawHud)
-		//instead, it's here
-		m_font.drawText(m_renderer, "FPS: " + std::to_string(m_fps.getFps()), m_camera.getScreenWidth() - m_font.measureText("FPS: 1000") - 10, 10);
 
 		//update input
 		m_canvas.checkInput();
@@ -468,6 +467,10 @@ void Game::run()
 		}
 
 		}
+
+		//draw fps(we need fps throughout the game, so it in not included in the function drawHud)
+		//instead, it's here
+		m_font.drawText(m_renderer, "FPS: " + std::to_string(m_fps.getFps()), m_camera.getScreenWidth() - m_font.measureText("FPS: 1000") - 10, 10);
 
 		//present the frame
 		m_renderer.present();

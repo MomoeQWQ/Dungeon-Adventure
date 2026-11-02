@@ -24,21 +24,21 @@ class Game
 {
 public:
 	Game() = default;
-
 	Game(const Game& source) = delete;
 	Game& operator=(const Game& source) = delete;
+
 	bool init();
 	void run();
-
 
 private:
 	static constexpr float kLevelDuration = 120.0f;
 	static constexpr int kHeroCount = 3;
-	static constexpr int kScreenW = 1024;
+	static constexpr int kScreenW = 1024;//default to init camera,and we'll update it when loading map file
 	static constexpr int kScreenH = 768;;
 	static constexpr const char* heroNames[kHeroCount] = { "Warrior", "Ranger", "Mage" };
 	static constexpr const char* levelNames[2] = { "Fixed", "Endless" };
 
+	//engine & render & world
 	GamesEngineeringBase::Window m_canvas;
 	GamesEngineeringBase::Timer m_timer;
 	Input m_input{};
@@ -49,6 +49,7 @@ private:
 	BitmapFont m_font{};
 
 	Tilemap m_map{ 64,48,Vec2{ 32.0f,32.0f } };//default tilemap
+
 	//Camera init(int worldWidth, int worldHeight,int screenWidth,int screenHeight)
 	//We need to create camera after map cuz it relies on the latter one
 	//since now we haven't init the map, use k-numbers to init camera
@@ -61,6 +62,7 @@ private:
 
 	World m_world{};
 
+	//Game
 	GameState m_state{ GameState::Intro };
 	int m_selectedHero{ 0 };
 	int m_selectedLevel{ 0 };
@@ -69,6 +71,7 @@ private:
 	float m_elapsed{ 0.0f };
 	Player* m_player{ nullptr };
 
+	//helper functions
 	void loadTextures();
 	void setupDefs();
 	Player* startLevel(const HeroDef& hero, int level);
