@@ -1,5 +1,6 @@
 #include "Game.h"
 #include "../Entities/Turret.h"
+#include "../Entities/SpikeTrap.h"
 #include <cassert>
 
 namespace 
@@ -232,6 +233,8 @@ Player* Game::startLevel(const HeroDef& hero, int level)
 	m_camera.setClamp(!endless);
 
 	Player* playerPtr = new Player(Vec2{ 96.0f,96.0f }, &m_map, &m_input, &m_world, hero);
+
+	m_world.add(new SpikeTrap(Vec2{ 200.0f,200.0f }, Vec2{ 32.0f, 32.0f }, m_tm.get("trap_spikes"), playerPtr, 10, true));
 	m_world.add(playerPtr);
 	m_world.add(new Spawner(Vec2{ 800.0f, 300.0f }, Vec2{ 112.0f, 96.0f }, m_tm.get("spawner_new"), 100, &m_map, &m_world, playerPtr, &m_enemyDefs[0], 5.0f)); // balanced
 	m_world.add(new Spawner(Vec2{ 1500.0f, 900.0f }, Vec2{ 112.0f, 96.0f }, m_tm.get("spawner_new"), 80, &m_map, &m_world, playerPtr, &m_enemyDefs[1], 4.0f)); // fast

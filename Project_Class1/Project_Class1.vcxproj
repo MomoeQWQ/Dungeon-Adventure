@@ -146,6 +146,7 @@
     <ClCompile Include="Entities\Player.cpp" />
     <ClCompile Include="Entities\Projectile.cpp" />
     <ClCompile Include="Entities\Spawner.cpp" />
+    <ClCompile Include="Entities\SpikeTrap.cpp" />
     <ClCompile Include="Entities\Turret.cpp" />
     <ClCompile Include="Game\Game.cpp" />
     <ClCompile Include="Game\Input.cpp" />
@@ -170,6 +171,7 @@
     <ClInclude Include="Entities\Player.h" />
     <ClInclude Include="Entities\Projectile.h" />
     <ClInclude Include="Entities\ProjectileDef.h" />
+    <ClInclude Include="Entities\SpikeTrap.h" />
     <ClInclude Include="Entities\Turret.h" />
     <ClInclude Include="Entities\Spawner.h" />
     <ClInclude Include="GamesEngineeringBase.h" />
