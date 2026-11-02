@@ -23,46 +23,60 @@
 class Game
 {
 public:
-	Game();
-	~Game();
+	Game() = default;
+
+	Game(const Game& source) = delete;
+	Game& operator=(const Game& source) = delete;
+	bool init();
+	void run();
+
 
 private:
 	static constexpr float kLevelDuration = 120.0f;
 	static constexpr int kHeroCount = 3;
-	static const HeroDef* heroes[kHeroCount] = { &Warrior, &Ranger, &Mage };
-	static const char* heroNames[kHeroCount] = { "Warrior", "Ranger", "Mage" };
-	static const char* levelNames[2] = { "Fixed", "Endless" };
+	static constexpr int kScreenW = 1024;
+	static constexpr int kScreenH = 768;;
+	static constexpr const char* heroNames[kHeroCount] = { "Warrior", "Ranger", "Mage" };
+	static constexpr const char* levelNames[2] = { "Fixed", "Endless" };
 
 	GamesEngineeringBase::Window m_canvas;
 	GamesEngineeringBase::Timer m_timer;
-	Input m_input; 
-	Renderer m_renderer;
-	FpsCounter m_fps;
+	Input m_input{};
+	Renderer m_renderer{m_canvas};
+	FpsCounter m_fps{};
 
-	TextureManager m_tm; 
-	BitmapFont m_font;
+	TextureManager m_tm{};
+	BitmapFont m_font{};
 
-	Tilemap m_map; 
-	Camera m_camera;
+	Tilemap m_map{ 64,48,Vec2{ 32.0f,32.0f } };//default tilemap
+	//Camera init(int worldWidth, int worldHeight,int screenWidth,int screenHeight)
+	//We need to create camera after map cuz it relies on the latter one
+	//since now we haven't init the map, use k-numbers to init camera
+	Camera m_camera{ kScreenW, kScreenH, static_cast<int>(m_canvas.getWidth()), static_cast<int>(m_canvas.getHeight()) };
 
 	EnemyDef m_enemyDefs[3]; 
 	ProjectileDef m_shotDefs[3]; 
 	ProjectileDef m_magicDef; 
 	HeroDef m_heroDefs[kHeroCount];
 
-	World m_world;
+	World m_world{};
 
-	GameState m_state; 
-	int m_selectedHero, m_selectedLevel; 
-	bool m_running, m_won; 
-	float m_elapsed; 
+	GameState m_state{ GameState::Intro };
+	int m_selectedHero{ 0 };
+	int m_selectedLevel{ 0 };
+	bool m_running{true};
+	bool m_won{ false };
+	float m_elapsed{ 0.0f };
 	Player* m_player{ nullptr };
+
+	void loadTextures();
+	void setupDefs();
+	Player* startLevel(const HeroDef& hero, int level);
+	void drawCentered(const std::string& s, int y);
+	void drawHud();
+	void updateIntro();
+	void updateMenu();
+	void updateHelp();
+	void updatePlay(float dt);
+	void updateTally();
 };
-
-Game::Game()
-{
-}
-
-Game::~Game()
-{
-}
