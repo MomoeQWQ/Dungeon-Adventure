@@ -3,6 +3,7 @@
 #include "../Entities/SpikeTrap.h"
 #include "../Entities/Pickup.h"
 #include "../Entities/Door.h"
+#include "../Entities/Switch.h"
 #include <cassert>
 
 namespace 
@@ -245,18 +246,27 @@ Player* Game::startLevel(const HeroDef& hero, int level)
 	m_camera.setClamp(!endless);
 
 	Player* playerPtr = new Player(Vec2{ 96.0f,96.0f }, &m_map, &m_input, &m_world, hero);
+	SpikeTrap* spike1 = new SpikeTrap(Vec2{ 200.0f,200.0f }, Vec2{ 32.0f, 32.0f }, m_tm.get("trap_spikes"), playerPtr, 10, true);
+	SpikeTrap* spike2 = new SpikeTrap(Vec2{ 200.0f,400.0f }, Vec2{ 32.0f, 32.0f }, m_tm.get("trap_spikes"), playerPtr, 10, true);
+	Switch* sw = new Switch{ Vec2{ 150.0f,250.0f }, Vec2{ 32.0f, 32.0f } ,m_tm.get("switch_off") ,m_tm.get("switch_on") ,&m_world ,playerPtr };
+	
 
-	m_world.add(new SpikeTrap(Vec2{ 200.0f,200.0f }, Vec2{ 32.0f, 32.0f }, m_tm.get("trap_spikes"), playerPtr, 10, true));
+	m_world.add(spike1);
+	m_world.add(spike2);
+	sw->addTarget(spike1->getId());
+	sw->addTarget(spike2->getId());
+	m_world.add(sw);
 	m_world.add(new Pickup(Vec2{ 360.0f,160.0f }, Vec2{ 16.0f, 16.0f }, m_tm.get("potion_hp"), PickupType::Health, 30, playerPtr));
 	m_world.add(new Pickup(Vec2{ 220.0f,160.0f }, Vec2{ 16.0f, 16.0f }, m_tm.get("potion_mp"), PickupType::Mana, 30, playerPtr));
-	m_world.add(new Pickup(Vec2{ 280.0f,160.0f }, Vec2{ 16.0f, 16.0f }, m_tm.get("key"), PickupType::Key, 30, playerPtr));
+	m_world.add(new Pickup(Vec2{ 280.0f,160.0f }, Vec2{ 16.0f, 16.0f }, m_tm.get("key"), PickupType::Key, 1, playerPtr));
 	m_world.add(new Door(20, 24, &m_map, playerPtr));
 	m_world.add(new Door(21, 24, &m_map, playerPtr));
-	m_world.add(playerPtr);
 	m_world.add(new Spawner(Vec2{ 800.0f, 300.0f }, Vec2{ 112.0f, 96.0f }, m_tm.get("spawner_new"), 100, &m_map, &m_world, playerPtr, &m_enemyDefs[0], 5.0f)); // balanced
 	m_world.add(new Spawner(Vec2{ 1500.0f, 900.0f }, Vec2{ 112.0f, 96.0f }, m_tm.get("spawner_new"), 80, &m_map, &m_world, playerPtr, &m_enemyDefs[1], 4.0f)); // fast
 	m_world.add(new Spawner(Vec2{ 400.0f, 1200.0f }, Vec2{ 112.0f, 96.0f }, m_tm.get("spawner_new"), 150, &m_map, &m_world, playerPtr, &m_enemyDefs[2], 8.0f)); // tanky
+	m_world.add(playerPtr);
 	m_world.add(new Turret(Vec2{ 300.0f,300.0f }, Vec2{ 32.0f, 32.0f }, m_tm.get("trap_turret"), 60, &m_map, &m_world, &m_enemyShotDef, 1.5, 160000, playerPtr->getId()));
+	
 	return playerPtr;
 };
 

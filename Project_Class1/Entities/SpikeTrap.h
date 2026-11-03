@@ -16,6 +16,7 @@ public:
 	void update(float dt) override;
 	void draw(Renderer& renderer, const Camera& camera) const override;
 	void setActive(bool) {};//reserved
+	virtual void onTriggered() override;
 
 private:
 	Character* m_target{};

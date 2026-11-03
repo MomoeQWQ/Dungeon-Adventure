@@ -14,3 +14,8 @@ void SpikeTrap::draw(Renderer& renderer, const Camera& camera) const
 		return;
 	Entity::draw(renderer, camera);
 }
+
+void SpikeTrap::onTriggered()
+{
+	m_active = !m_active;
+}
