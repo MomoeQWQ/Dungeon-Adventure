@@ -241,7 +241,8 @@ void Game::setupDefs()
 
 }
 
-Player* Game::startLevel(const HeroDef& hero, int level)
+//seperated from startLevel, cuz also used in loadGame
+bool Game::prepareLevel(int level)
 {
 	m_world.clear();
 	bool endless = (level == 1);
@@ -249,6 +250,11 @@ Player* Game::startLevel(const HeroDef& hero, int level)
 		std::cerr << "load map failure!";
 	m_map.setWrap(endless);
 	m_camera.setClamp(!endless);
+}
+
+Player* Game::startLevel(const HeroDef& hero, int level)
+{
+	prepareLevel(level);
 
 	Player* playerPtr = new Player(Vec2{ 96.0f,96.0f }, &m_map, &m_input, &m_world, hero);
 	SpikeTrap* spike1 = new SpikeTrap(Vec2{ 200.0f,200.0f }, Vec2{ 32.0f, 32.0f }, m_tm.get("trap_spikes"), playerPtr, 10, true);
@@ -579,4 +585,86 @@ bool Game::saveGame(const std::string& path) const
 		writeEntity(out, *e);
 	}
 	return static_cast<bool>(out);
+}
+
+
+bool Game::loadGame(const std::string& path) 
+{
+	std::ifstream in{ path };
+	if (!in)
+	{
+		std::cerr << "cannot open save file:bad path";
+		return false;
+	}
+
+	std::string magic; 
+	int version{};
+	in >> magic >> version;
+	if (!in || magic != "DASAVE" || version != 1)
+	{
+		std::cerr << "cannot open save file:bad header";
+		return false;
+	}
+
+	int level{};
+	int hero{};
+	float elapsed{};
+	int score{};
+	int kills{};
+	in >> level >> hero >> elapsed >> score >> kills;
+	if(!in||(level!=0&&level!=1)||hero<0||hero>=kHeroCount||elapsed<0||score<0||kills<0)
+	{
+		std::cerr << "cannot open save file:bad level/hero";
+		return false;
+	}
+
+	if(!prepareLevel(level))
+	{
+		std::cerr << "cannot open save file:bad map";
+		return false;
+	}
+	m_selectedHero = hero; 
+	m_selectedLevel = level; 
+	m_elapsed = elapsed;
+	m_world.setStats(score, kills);
+	m_player = nullptr;
+
+	int typeInt{};
+	int id{};
+	while (in >> typeInt >> id)
+	{
+		Entity* e = nullptr;
+		switch (static_cast<EntityType>(typeInt))
+		{
+		case EntityType::Player:
+		{
+			m_player = new Player{ Vec2{}, &m_map, &m_input, &m_world, m_heroDefs[hero] };
+			e = m_player;
+			break;
+		}
+		case EntityType::Enemy:
+		{
+			int defIndex{};
+			in >> defIndex;
+			if(!m_player||defIndex<0||defIndex>2)
+			{
+				break;
+			}
+			e = new Enemy{ Vec2{}, &m_map, m_player, m_enemyDefs[defIndex] };
+			break;
+		}
+		case EntityType::Spawner:
+		{
+			int defIndex{};
+			int maxHp{};
+			int interval{};
+			in >> defIndex >> maxHp >> interval;
+			if (!m_player)
+			{
+				break;
+			}
+			e = new Spawner(Vec2{}, Vec2{}, kSpawnerSize,)
+		}
+		}
+	}
 }

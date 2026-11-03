@@ -73,9 +73,13 @@ private:
 	float m_elapsed{ 0.0f };
 	Player* m_player{ nullptr };
 
+	//load Game(for S/L)
+	bool loadGame(const std::string& path);
+
 	//helper functions
 	void loadTextures();
 	void setupDefs();
+	bool prepareLevel(int level);
 	Player* startLevel(const HeroDef& hero, int level);
 	void drawCentered(const std::string& s, int y);
 	void drawBar(int x, int y, int w, int h, float cur, float max, unsigned char r, unsigned char g, unsigned char b);
