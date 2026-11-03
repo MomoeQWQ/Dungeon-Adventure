@@ -132,3 +132,23 @@ float Player::getMaxMana() const
 {
 	return m_def->maxMana;
 }
+
+void Player::addKey() 
+{
+	m_keys += 1;
+}
+
+bool Player::useKey() 
+{
+	if (m_keys > 0)
+	{
+		m_keys -= 1;
+		return true;
+	}
+	return false;
+}
+
+int Player::getKeys() const 
+{
+	return m_keys;
+}

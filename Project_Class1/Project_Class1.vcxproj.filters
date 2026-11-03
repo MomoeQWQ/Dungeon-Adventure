@@ -84,6 +84,15 @@
     <ClCompile Include="Game\Game.cpp">
       <Filter>Source Files\Game</Filter>
     </ClCompile>
+    <ClCompile Include="Entities\Turret.cpp">
+      <Filter>Source Files\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="Entities\SpikeTrap.cpp">
+      <Filter>Source Files\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="Entities\Pickup.cpp">
+      <Filter>Source Files\Entity</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GamesEngineeringBase.h">
@@ -154,6 +163,15 @@
     </ClInclude>
     <ClInclude Include="Game\Game.h">
       <Filter>Header Files\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Entities\Pickup.h">
+      <Filter>Header Files\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="Entities\Turret.h">
+      <Filter>Header Files\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="Entities\SpikeTrap.h">
+      <Filter>Header Files\Entity</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

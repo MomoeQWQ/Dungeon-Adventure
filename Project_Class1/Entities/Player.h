@@ -31,6 +31,9 @@ public:
 	void addMana(int);
 	float getMana() const;
 	float getMaxMana() const;
+	void addKey();
+	bool useKey();
+	int getKeys() const;
 
 private:
 	//player para
@@ -39,6 +42,7 @@ private:
 	const HeroDef* m_def{};
 	Vec2 m_facing{ 1.0f,0.0f };
 	float m_mana{};
+	int m_keys{};
 
 	// Timer
 	float m_meleeTimer{ 0.0f };

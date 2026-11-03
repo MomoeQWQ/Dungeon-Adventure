@@ -143,6 +143,7 @@
     <ClCompile Include="Entities\Character.cpp" />
     <ClCompile Include="Entities\Enemy.cpp" />
     <ClCompile Include="Entities\Entity.cpp" />
+    <ClCompile Include="Entities\Pickup.cpp" />
     <ClCompile Include="Entities\Player.cpp" />
     <ClCompile Include="Entities\Projectile.cpp" />
     <ClCompile Include="Entities\Spawner.cpp" />
@@ -168,6 +169,7 @@
     <ClInclude Include="Entities\EnemyDef.h" />
     <ClInclude Include="Entities\Entity.h" />
     <ClInclude Include="Entities\HeroDef.h" />
+    <ClInclude Include="Entities\Pickup.h" />
     <ClInclude Include="Entities\Player.h" />
     <ClInclude Include="Entities\Projectile.h" />
     <ClInclude Include="Entities\ProjectileDef.h" />
