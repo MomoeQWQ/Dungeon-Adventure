@@ -37,6 +37,10 @@ public:
 
 	EntityType getType() const override;
 
+	void save(std::ostream& out) const override;
+
+	void load(std::istream& in) override;
+
 private:
 	//player para
 	const Input* m_input{};

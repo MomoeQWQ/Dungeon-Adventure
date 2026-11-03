@@ -23,6 +23,12 @@ public:
 
 	EntityType getType() const override;
 
+	void saveKey(std::ostream& out) const override;
+
+	void save(std::ostream& out) const override;
+
+	void load(std::istream& in) override;
+
 private:
 	Tilemap* m_map{};
 	Player* m_target{};

@@ -5,6 +5,8 @@
 #include "../Entities/Door.h"
 #include "../Entities/Switch.h"
 #include <cassert>
+#include <fstream>
+#include <iomanip>
 
 namespace 
 { 
@@ -414,6 +416,12 @@ void Game::updatePlay(float dt)
 		dt = 0.05f;
 	m_elapsed += dt;
 
+	//save
+	if (m_input.wasPressed(VK_F5))
+	{
+		saveGame("save.txt");
+	}
+
 	//movement of player
 	m_world.update(dt);
 
@@ -533,3 +541,42 @@ void Game::run()
 	}
 }
 
+void Game::writeEntity(std::ostream& out, const Entity& e) const
+{
+	out << static_cast<int>(e.getType()) << ' ';
+	out << e.getId() << ' ';
+	e.saveKey(out);
+	e.save(out);
+	out << '\n';
+}
+
+bool Game::saveGame(const std::string& path) const
+{
+	std::ofstream out{ path };
+	if (!out)
+	{
+		std::cerr << "invalid save file!";
+		return false;
+	}
+	out << std::setprecision(9);
+	out << "DASAVE 1" << '\n';
+	out << m_selectedLevel << ' ' << m_selectedHero << ' ' << m_elapsed << ' ' << m_world.getScore() << ' ' << m_world.getKills() << ' ' << '\n';
+	writeEntity(out, *m_player);
+	for(int i=0;i<m_world.getCount();i++)
+	{
+		const Entity* e = m_world.getAt(i);
+		if (e == m_player)
+			continue;
+		if (!e->isAlive())
+			continue;
+		/*
+		below is designed deliberately, cuz Projectiles don't save which def they're generated from
+		if we'd like to save them,we have to give every projectile an index
+		but they only have at most 3 second life,so I give up saving them
+		*/
+		if (e->getType() == EntityType::Projectile)
+			continue;
+		writeEntity(out, *e);
+	}
+	return static_cast<bool>(out);
+}

@@ -21,6 +21,8 @@ public:
 
 	EntityType getType() const override;
 
+	void saveKey(std::ostream& out) const override;
+
 private:
 	PickupType m_type{};
 	int m_amount{};

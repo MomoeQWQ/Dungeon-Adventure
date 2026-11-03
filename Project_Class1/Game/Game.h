@@ -85,4 +85,6 @@ private:
 	void updateHelp();
 	void updatePlay(float dt);
 	void updateTally();
+	bool saveGame(const std::string& path) const;
+	void writeEntity(std::ostream& out, const Entity& e) const;
 };

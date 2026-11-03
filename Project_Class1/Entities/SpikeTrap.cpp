@@ -24,3 +24,19 @@ EntityType SpikeTrap::getType() const
 {
 	return EntityType::Spike;
 }
+
+void SpikeTrap::saveKey(std::ostream& out) const
+{
+	out << m_damage << ' ';
+}
+
+void SpikeTrap::save(std::ostream& out) const
+{
+	Entity::save(out);
+	out << m_active << ' ';
+}
+void SpikeTrap::load(std::istream& in)
+{
+	Entity::load(in);
+	in >> m_active;
+}

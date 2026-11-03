@@ -20,3 +20,20 @@ EntityType Spawner::getType() const
 {
 	return EntityType::Spawner;
 }
+
+void Spawner::saveKey(std::ostream& out) const
+{
+	out << m_def->index << ' ' << getMaxHp() << ' ' << m_interval << ' ';
+}
+
+void Spawner::save(std::ostream& out) const
+{
+	Character::save(out);
+	out << m_timer << ' ';
+}
+
+void Spawner::load(std::istream& in)
+{
+	Character::load(in);
+	in >> m_timer;
+}

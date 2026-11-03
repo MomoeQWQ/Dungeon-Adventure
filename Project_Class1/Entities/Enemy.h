@@ -11,6 +11,7 @@ public:
 		, m_speed{ def.speed }
 		, m_contactDamage{ def.contactDamage }
 		, m_score{ def.score }
+		, m_defIndex{def.index}
 	{
 		assert(m_target != nullptr && "nullptr target cannot be accepted to create an Enemy!");
 		m_hitboxOffset = def.hitboxOffset;
@@ -23,11 +24,14 @@ public:
 
 	EntityType getType() const override;
 
+	void saveKey(std::ostream& out) const override;
+
 private:
 	Character* m_target{};
 	float m_speed{};
 	int m_contactDamage{};
 	int m_score{};
+	int m_defIndex{};
 
 	void onUpdate(float dt) override;
 };

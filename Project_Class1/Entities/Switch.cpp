@@ -33,3 +33,26 @@ EntityType Switch::getType() const
 {
 	return EntityType::Switch;
 }
+
+void Switch::save(std::ostream& out) const 
+{
+	Entity::save(out);
+	out << m_on << ' ' << m_wasTouching << ' ' << m_targetCount << ' ';
+	for (int i = 0;i < m_targetCount;i++)
+	{
+		out << m_targetIds[i] << ' ';
+	}
+}
+
+void Switch::load(std::istream& in) 
+{
+	Entity::load(in);
+	in >> m_on;
+	m_texture = m_on ? m_texOn : m_texOff;//reload tex
+	in >> m_wasTouching >> m_targetCount;
+	assert(m_targetCount <= kMaxTargets);//avoid out of C-style array
+	for (int i = 0;i < m_targetCount;i++)
+	{
+		in >> m_targetIds[i];
+	}
+}

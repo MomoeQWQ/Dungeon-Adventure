@@ -86,3 +86,15 @@ void Character::setDamageScale(float scale)
 {
 	m_damageScale = scale;
 }
+
+void Character::save(std::ostream& out) const 
+{
+	Entity::save(out);
+	out << m_hp << ' ' << m_invulnTimer << ' ';
+}
+
+void Character::load(std::istream& in) 
+{
+	Entity::load(in);
+	in >> m_hp >> m_invulnTimer;
+}

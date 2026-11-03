@@ -157,3 +157,15 @@ EntityType Player::getType() const
 {
 	return EntityType::Player;
 }
+
+void Player::save(std::ostream& out) const 
+{
+	Character::save(out);
+	out << m_mana << ' ' << m_keys << ' ' << m_meleeTimer << ' ' << m_shootTimer << ' ' << m_skillTimer << ' ' << m_buffTimer << ' ' << m_facing.x << ' ' << m_facing.y << ' ';
+}
+
+void Player::load(std::istream& in) 
+{
+	Character::load(in);
+	in >> m_mana >> m_keys >> m_meleeTimer >> m_shootTimer >> m_skillTimer >> m_buffTimer >> m_facing.x >> m_facing.y;
+}

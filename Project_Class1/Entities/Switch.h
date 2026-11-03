@@ -27,6 +27,10 @@ public:
 
 	EntityType getType() const override;
 
+	void save(std::ostream& out) const override;
+
+	void load(std::istream& in) override;
+
 private:
 	static constexpr int kMaxTargets = 4;
 

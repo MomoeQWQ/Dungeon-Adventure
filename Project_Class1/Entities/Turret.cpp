@@ -23,3 +23,20 @@ EntityType Turret::getType() const
 {
 	return EntityType::Turret;
 }
+
+void Turret::saveKey(std::ostream& out) const
+{
+	out << getMaxHp() << ' ' << m_interval << ' ' << m_range << ' ';
+}
+
+void Turret::save(std::ostream& out) const
+{
+	Character::save(out);
+	out << m_timer << ' ' << m_targetId << ' ';
+}
+
+void Turret::load(std::istream& in) 
+{
+	Character::load(in);
+	in >> m_timer >> m_targetId;
+}

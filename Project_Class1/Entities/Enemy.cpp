@@ -29,3 +29,8 @@ EntityType Enemy::getType() const
 {
 	return EntityType::Enemy;
 }
+
+void Enemy::saveKey(std::ostream& out) const 
+{
+	out << m_defIndex << ' ';
+}

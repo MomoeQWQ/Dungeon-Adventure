@@ -35,6 +35,10 @@ protected:
 	const Tilemap* getMap() const;
 	void setDamageScale(float);
 
+	void save(std::ostream& out) const override;
+
+	void load(std::istream& in) override;
+
 private:
 	static constexpr float kInvulnDuration{ 0.8f };
 	int m_hp{};

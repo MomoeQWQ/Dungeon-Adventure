@@ -30,3 +30,8 @@ EntityType Pickup::getType() const
 {
 	return EntityType::Pickup;
 }
+
+void Pickup::saveKey(std::ostream& out) const
+{
+	out << static_cast<int>(m_type) << ' ' << m_amount<<' ';
+}
