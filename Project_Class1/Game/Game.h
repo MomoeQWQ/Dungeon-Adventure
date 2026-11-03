@@ -78,6 +78,7 @@ private:
 	void setupDefs();
 	Player* startLevel(const HeroDef& hero, int level);
 	void drawCentered(const std::string& s, int y);
+	void drawBar(int x, int y, int w, int h, float cur, float max, unsigned char r, unsigned char g, unsigned char b);
 	void drawHud();
 	void updateIntro();
 	void updateMenu();

@@ -227,7 +227,7 @@ void Game::setupDefs()
 		.skillMagnitude{ 0 },
 		.magic{ &m_magicDef },
 		.maxMana{ 100.0f },
-		.skillManaCost{ 10.0f },
+		.skillManaCost{ 20.0f },
 		.manaRegen{ 5.0f }
 	};
 
@@ -261,6 +261,16 @@ void Game::drawCentered(const std::string& s, int y)
 	m_font.drawText(m_renderer, s, (m_camera.getScreenWidth() - m_font.measureText(s)) / 2, y);
 };
 
+void Game::drawBar(int x, int y, int w, int h, float cur, float max,unsigned char r, unsigned char g, unsigned char b)
+{
+	if (max <= 0) 
+		return;
+	int fill = static_cast<int>(w * cur / max);
+	m_renderer.drawRect(x, y, w, h, 105, 105, 105);
+	m_renderer.drawRect(x, y, fill, h, r, g, b);
+	m_font.drawText(m_renderer, std::to_string(static_cast<int>(cur)) + "/" + std::to_string(static_cast<int>(max)), x + w + 10, y);
+}
+
 void Game::drawHud()
 {
 	if (m_player == nullptr)
@@ -272,13 +282,13 @@ void Game::drawHud()
 
 	//draw Hp bar
 	m_font.drawText(m_renderer, "^", 10, 10);
-	m_renderer.drawRect(m_font.measureText("^") + 20, (41 - 10) / 2, 200, 30, 105, 105, 105);
-	m_renderer.drawRect(m_font.measureText("^") + 20, (41 - 10) / 2, 200 * static_cast<float>(m_player->getHp()) / m_player->getMaxHp(), 30, 244, 128, 128);
-	m_font.drawText(m_renderer, std::to_string(m_player->getHp()) + "/" + std::to_string(m_player->getMaxHp()), m_font.measureText("^") + 230, 9);
+	drawBar(m_font.measureText("^") + 20, 20, 200, 30, m_player->getHp(), m_player->getMaxHp(), 244, 128, 128);
+	m_renderer.drawImage(*m_tm.get("potion_mp") ,10, 65);
+	drawBar(m_font.measureText("^") + 20, 58, 200, 30, m_player->getMana(), m_player->getMaxMana(), 70, 130, 230);
 
 	//draw Score and Kills
-	m_font.drawText(m_renderer, "Score: " + std::to_string(m_world.getScore()), 10, 40);
-	m_font.drawText(m_renderer, "Kills: " + std::to_string(m_world.getKills()), 10, 70);
+	drawCentered("Score: " + std::to_string(m_world.getScore()), 15);
+	drawCentered("Kills: " + std::to_string(m_world.getKills()), 45);
 }
 
 //init the game:read from files, create window, refresh camera, load tex, create entities' defs
