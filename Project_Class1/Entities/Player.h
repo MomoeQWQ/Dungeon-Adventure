@@ -13,10 +13,11 @@ class Player : public Character
 {
 public:
 	Player(Vec2 pos, const Tilemap* map, const Input* input, World* world, const HeroDef& def)
-		:Character{pos,def.size,def.tex,def.maxHp,map}
-		,m_input{input}
-		,m_world{world}
+		: Character{pos,def.size,def.tex,def.maxHp,map}
+		, m_input{input}
+		, m_world{world}
 		, m_def{&def}
+		, m_mana{def.maxMana}
 	{
 		assert(input != nullptr && "nullptr input cannot be accepted to create a Player!");
 		assert(world != nullptr && "nullptr world cannot be accepted to create a Player!");
@@ -27,12 +28,17 @@ public:
 
 	Rect m_range{};
 
+	void addMana(int);
+	float getMana() const;
+	float getMaxMana() const;
+
 private:
 	//player para
 	const Input* m_input{};
 	World* m_world{};
 	const HeroDef* m_def{};
 	Vec2 m_facing{ 1.0f,0.0f };
+	float m_mana{};
 
 	// Timer
 	float m_meleeTimer{ 0.0f };

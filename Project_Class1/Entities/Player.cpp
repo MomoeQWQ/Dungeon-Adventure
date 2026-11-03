@@ -17,11 +17,15 @@ void Player::onUpdate(float dt)
 	m_skillTimer = std::max(0.0f, m_skillTimer - dt);
 	m_buffTimer = std::max(0.0f, m_buffTimer - dt);
 
-	//set damage scale(for Skill::Defence
+	//set damage scale(for Skill::Defence)
 	if (m_buffTimer > 0.0f && m_def->skill == SkillType::Defence)
 		setDamageScale(m_def->skillMagnitude);
 	else
 		setDamageScale(1.0f);
+
+	//mana update
+	m_mana += m_def->manaRegen * dt;
+	m_mana = std::clamp(m_mana, 0.0f, m_def->maxMana);
 
 	//move
 	Vec2 unit{ 0.0f,0.0f };
@@ -68,21 +72,22 @@ void Player::onUpdate(float dt)
 	}
 
 	//magic
-	if (m_input->wasPressed('L')&& m_skillTimer <= 0.0f)
+	if (m_input->wasPressed('L')&& m_skillTimer <= 0.0f && m_mana >= m_def->skillManaCost)
 	{
+		bool cast = false;
 		switch (m_def->skill) 
 		{
 			case SkillType::Defence: 
 			{
+				cast = true;
 				m_buffTimer = m_def->skillDuration;
-				m_skillTimer = m_def->skillCooldown;
 				break;
 			}
 		
 			case SkillType::Speed: 
 			{
+				cast = true;
 				m_buffTimer = m_def->skillDuration;
-				m_skillTimer = m_def->skillCooldown;
 				break;
 			}
 
@@ -97,10 +102,33 @@ void Player::onUpdate(float dt)
 					p->setTarget(ids[i]);
 					m_world->add(p);
 				}
-				if (count > 0)
-					m_skillTimer = m_def->skillCooldown;
+				if (count > 0) 
+				{
+					cast = true;
+				}
 				break;
 			}
 		}
+		if(cast)
+		{
+			m_skillTimer = m_def->skillCooldown;
+			m_mana -= m_def->skillManaCost;
+		}
 	}
+}
+
+void Player::addMana(int add) 
+{
+	m_mana += add;
+	m_mana = std::clamp(m_mana, 0.0f, m_def->maxMana);
+}
+
+float Player::getMana() const 
+{
+	return m_mana;
+}
+
+float Player::getMaxMana() const 
+{
+	return m_def->maxMana;
 }

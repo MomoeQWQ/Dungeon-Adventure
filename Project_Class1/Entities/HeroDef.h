@@ -34,4 +34,7 @@ struct HeroDef
 	float skillDuration{};
 	float skillMagnitude{};
 	const ProjectileDef* magic{};
+	float maxMana{};
+	float skillManaCost{};
+	float manaRegen{};
 };

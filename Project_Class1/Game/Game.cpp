@@ -172,7 +172,10 @@ void Game::setupDefs()
 		.skillCooldown{ 8.0f },
 		.skillDuration{ 4.0f },
 		.skillMagnitude{ 0.5f },
-		.magic{ nullptr }
+		.magic{ nullptr },
+		.maxMana{50.0f},
+		.skillManaCost{5.0f},
+		.manaRegen{2.0f}
 	};
 
 	m_heroDefs[1] = HeroDef
@@ -195,7 +198,10 @@ void Game::setupDefs()
 		.skillCooldown{ 6.0f },
 		.skillDuration{ 3.0f },
 		.skillMagnitude{ 2.0f },
-		.magic{ nullptr }
+		.magic{ nullptr },
+		.maxMana{ 70.0f },
+		.skillManaCost{ 10.0f },
+		.manaRegen{ 3.0f }
 	};
 
 	m_heroDefs[2] = HeroDef
@@ -218,7 +224,10 @@ void Game::setupDefs()
 		.skillCooldown{ 3.0f },
 		.skillDuration{ 0.0f },
 		.skillMagnitude{ 0 },
-		.magic{ &m_magicDef }
+		.magic{ &m_magicDef },
+		.maxMana{ 100.0f },
+		.skillManaCost{ 10.0f },
+		.manaRegen{ 5.0f }
 	};
 
 }
