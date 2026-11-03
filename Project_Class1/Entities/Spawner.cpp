@@ -15,3 +15,8 @@ void Spawner::onUpdate(float dt)
 		m_timer -= m_interval;
 	}
 }
+
+EntityType Spawner::getType() const
+{
+	return EntityType::Spawner;
+}

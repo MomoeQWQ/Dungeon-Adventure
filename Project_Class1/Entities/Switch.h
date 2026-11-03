@@ -25,6 +25,8 @@ public:
 	void update(float dt) override;
 	void addTarget(int id);
 
+	EntityType getType() const override;
+
 private:
 	static constexpr int kMaxTargets = 4;
 

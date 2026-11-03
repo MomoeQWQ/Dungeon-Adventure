@@ -17,6 +17,8 @@ public:
 	bool isInvulnerable() const;
 	void onHit(int damage) override;
 	void draw(Renderer& renderer, const Camera& camera) const override;
+
+	virtual EntityType getType() const = 0;
 	
 protected:
 	Character(Vec2 pos, Vec2 size, const GamesEngineeringBase::Image* tex, int maxHp, const Tilemap* map)

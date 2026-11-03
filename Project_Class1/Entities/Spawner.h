@@ -22,6 +22,8 @@ public:
 		m_team = Team::Enemy;
 	}
 
+	EntityType getType() const override;
+
 private:
 	World* m_world{};
 	Character* m_target{};

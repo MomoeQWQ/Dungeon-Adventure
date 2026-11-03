@@ -12,4 +12,5 @@ struct EnemyDef
 	int contactDamage{};
 	float speed{};
 	int score{};
+	int index{};
 };

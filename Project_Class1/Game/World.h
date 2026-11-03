@@ -25,6 +25,11 @@ public:
 	int getScore() const;
 	int getKills() const;
 
+	//for S/L
+	void addWithId(Entity* e, int id);
+	Entity* getAt(int i) const;
+	void setStats(int score, int kills);
+
 private:
 	DynamicArray<Entity*> m_entities{};
 	int m_nextId{ 0 };

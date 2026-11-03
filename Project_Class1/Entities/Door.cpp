@@ -10,3 +10,8 @@ void Door::update(float dt)
 		m_open = true;
 	}
 }
+
+EntityType Door::getType() const 
+{
+	return EntityType::Door;
+}

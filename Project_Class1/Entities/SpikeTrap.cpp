@@ -19,3 +19,8 @@ void SpikeTrap::onTriggered()
 {
 	m_active = !m_active;
 }
+
+EntityType SpikeTrap::getType() const
+{
+	return EntityType::Spike;
+}

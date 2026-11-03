@@ -19,6 +19,8 @@ public:
 		m_team = Team::Neutral;
 	}
 
+	EntityType getType() const override;
+
 private:
 	PickupType m_type{};
 	int m_amount{};

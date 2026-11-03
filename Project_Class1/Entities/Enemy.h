@@ -21,6 +21,8 @@ public:
 	int getContactDamage() const;
 	int getScoreValue() const override { return m_score; };
 
+	EntityType getType() const override;
+
 private:
 	Character* m_target{};
 	float m_speed{};

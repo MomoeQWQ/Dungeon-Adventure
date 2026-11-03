@@ -4,6 +4,8 @@
 #include "../Render/Renderer.h"
 #include "../Render/Camera.h"
 #include "../Core/Rect.h"
+#include "EntityType.h"
+#include <iosfwd>
 
 enum class Team
 {
@@ -43,6 +45,15 @@ public:
 	virtual int getScoreValue() const { return 0; }
 
 	virtual void onTriggered() {}
+
+	//function below is added to support S/L
+	virtual EntityType getType() const = 0;
+
+	virtual void saveKey(std::ostream& out) const {}
+
+	virtual void save(std::ostream& out) const;
+
+	virtual void load(std::istream& in);
 
 protected:
 	Entity(Vec2 pos, Vec2 size, const GamesEngineeringBase::Image* tex)

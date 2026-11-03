@@ -35,6 +35,8 @@ public:
 	bool useKey();
 	int getKeys() const;
 
+	EntityType getType() const override;
+
 private:
 	//player para
 	const Input* m_input{};

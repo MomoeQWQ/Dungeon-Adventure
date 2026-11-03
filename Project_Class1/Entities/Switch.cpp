@@ -28,3 +28,8 @@ void Switch::addTarget(int id)
 	m_targetIds[m_targetCount] = id;
 	m_targetCount++;
 }
+
+EntityType Switch::getType() const 
+{
+	return EntityType::Switch;
+}

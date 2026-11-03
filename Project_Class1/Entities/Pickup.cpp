@@ -25,3 +25,8 @@ void Pickup::update(float dt)
 	}
 	destroy();
 }
+
+EntityType Pickup::getType() const 
+{
+	return EntityType::Pickup;
+}

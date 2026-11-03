@@ -18,6 +18,8 @@ public:
 	void setActive(bool) {};//reserved
 	virtual void onTriggered() override;
 
+	EntityType getType() const override;
+
 private:
 	Character* m_target{};
 	int m_damage;

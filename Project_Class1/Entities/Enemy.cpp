@@ -24,3 +24,8 @@ int Enemy::getContactDamage() const
 {
 	return m_contactDamage;
 }
+
+EntityType Enemy::getType() const
+{
+	return EntityType::Enemy;
+}

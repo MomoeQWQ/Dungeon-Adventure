@@ -82,7 +82,8 @@ void Game::setupDefs()
 		.maxHp{ 30 },
 		.contactDamage{ 10 },
 		.speed{ 100 },
-		.score{ 10 }
+		.score{ 10 },
+		.index{0}
 	};
 	m_enemyDefs[1] = EnemyDef //fast but squishy
 	{
@@ -93,7 +94,8 @@ void Game::setupDefs()
 		.maxHp{ 15 },
 		.contactDamage{ 5 },
 		.speed{ 150 },
-		.score{ 5 }
+		.score{ 5 },
+		.index{1}
 	};
 	m_enemyDefs[2] = EnemyDef //slow but tanky
 	{
@@ -104,7 +106,8 @@ void Game::setupDefs()
 		.maxHp{ 80 },
 		.contactDamage{ 20 },
 		.speed{ 60 },
-		.score{ 20 }
+		.score{ 20 },
+		.index{2}
 	};
 
 	//create ProjectileDefs

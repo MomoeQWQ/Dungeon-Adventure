@@ -152,3 +152,8 @@ int Player::getKeys() const
 {
 	return m_keys;
 }
+
+EntityType Player::getType() const
+{
+	return EntityType::Player;
+}

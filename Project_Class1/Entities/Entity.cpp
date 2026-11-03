@@ -1,4 +1,6 @@
 #include "Entity.h"
+#include <istream>
+#include <ostream>
 
 void Entity::draw(Renderer& renderer, const Camera& camera) const 
 {
@@ -45,4 +47,14 @@ int Entity::getId() const
 void Entity::setId(int id) 
 {
 	m_id = id;
+}
+
+void Entity::save(std::ostream& out) const 
+{
+	out << m_position.x << ' ' << m_position.y << ' ';
+}
+
+void Entity::load(std::istream& in) 
+{
+	in >> m_position.x >> m_position.y;
 }

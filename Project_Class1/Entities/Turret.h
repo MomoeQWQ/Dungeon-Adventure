@@ -22,6 +22,8 @@ public:
 		assert(interval > 0.0f && "interval cannot be zero or minus");
 	}
 
+	EntityType getType() const override;
+
 private:
 	World* m_world{};
 	const ProjectileDef* m_shot;

@@ -43,3 +43,8 @@ void Projectile::setTarget(int id)
 {
 	m_targetId = id;
 }
+
+EntityType Projectile::getType() const 
+{
+	return EntityType::Projectile;
+}

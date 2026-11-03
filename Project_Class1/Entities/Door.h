@@ -21,6 +21,8 @@ public:
 
 	void update(float dt) override;
 
+	EntityType getType() const override;
+
 private:
 	Tilemap* m_map{};
 	Player* m_target{};

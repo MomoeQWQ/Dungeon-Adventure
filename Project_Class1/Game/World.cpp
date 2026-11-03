@@ -8,7 +8,7 @@ constexpr int MaxtopN = 8;
 
 World::~World()
 {
-	m_entities.clear();//now function World::clear is in charge of delete
+	clear();
 }
 
 void World::add(Entity* e) 
@@ -145,7 +145,7 @@ void World::clear()
 {
 	for (int i = 0;i < m_entities.getSize();i++) 
 	{
-		delete m_entities[i];//Class World is in charge of memory'
+		delete m_entities[i];//Class World is in charge of memory
 		m_entities[i] = nullptr;//for safety
 	}
 	m_entities.clear();
@@ -161,4 +161,25 @@ int World::getScore() const
 int World::getKills() const 
 {
 	return m_kills;
+}
+
+// S/L methods
+void World::addWithId(Entity* e, int id) 
+{
+	assert(e != nullptr && "enetity cannot be nullptr");
+	e->setId(id);
+	m_entities.push_back(e);
+	m_nextId = std::max(m_nextId, id + 1);//avoid repeating Id after SL
+}
+
+Entity* World::getAt(int i) const 
+{
+	assert(i >= 0 && i < m_entities.getSize());
+	return m_entities[i];
+}
+
+void World::setStats(int score, int kills) 
+{
+	m_score = score;
+	m_kills = kills;
 }

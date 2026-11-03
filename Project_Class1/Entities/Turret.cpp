@@ -18,3 +18,8 @@ void Turret::onUpdate(float dt)
 	m_world->add(new Projectile{ getCenter() - m_shot->size * 0.5f,m_shot->size,m_shot->tex, unit * m_shot->speed,m_shot->damage,m_team,m_shot->lifetime,getMap(),m_world });
 	m_timer = m_interval;
 }
+
+EntityType Turret::getType() const
+{
+	return EntityType::Turret;
+}

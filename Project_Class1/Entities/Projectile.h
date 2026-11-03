@@ -27,6 +27,8 @@ public:
 	void update(float dt) override;
 	void setTarget(int id);
 
+	EntityType getType() const override;
+
 private:
 	int m_targetId{ -1 };
 	Vec2 m_velocity{};

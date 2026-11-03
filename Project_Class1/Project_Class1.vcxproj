@@ -171,6 +171,7 @@
     <ClInclude Include="Entities\Enemy.h" />
     <ClInclude Include="Entities\EnemyDef.h" />
     <ClInclude Include="Entities\Entity.h" />
+    <ClInclude Include="Entities\EntityType.h" />
     <ClInclude Include="Entities\HeroDef.h" />
     <ClInclude Include="Entities\Pickup.h" />
     <ClInclude Include="Entities\Player.h" />
