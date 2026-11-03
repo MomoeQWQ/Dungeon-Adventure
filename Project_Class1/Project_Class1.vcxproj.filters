@@ -93,6 +93,9 @@
     <ClCompile Include="Entities\Pickup.cpp">
       <Filter>Source Files\Entity</Filter>
     </ClCompile>
+    <ClCompile Include="Entities\Door.cpp">
+      <Filter>Source Files\Entity</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GamesEngineeringBase.h">
@@ -171,6 +174,9 @@
       <Filter>Header Files\Entity</Filter>
     </ClInclude>
     <ClInclude Include="Entities\SpikeTrap.h">
+      <Filter>Header Files\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="Entities\Door.h">
       <Filter>Header Files\Entity</Filter>
     </ClInclude>
   </ItemGroup>

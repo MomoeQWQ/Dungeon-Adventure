@@ -45,24 +45,18 @@ void Tilemap::draw(Renderer& renderer,const Camera& camera) const
 		{
 			Vec2 worldCoord { static_cast<float>(col) * m_tilesize.x ,static_cast<float>(row) * m_tilesize.y };
 			Vec2 screenCoord = camera.worldToScreen(worldCoord);
-			switch (tileAt(col, row))
+			TileType type{ tileAt(col,row) };
+			const GamesEngineeringBase::Image* tex{ m_tiletex[static_cast<int>(type)] };
+			int sx = static_cast<int>(screenCoord.x);
+			int sy = static_cast<int>(screenCoord.y);
+			if (tex != nullptr) 
 			{
-			case TileType::Wall:
-				if (m_tiletex[static_cast<int>(TileType::Wall)] != nullptr)
-					renderer.drawImage(*m_tiletex[static_cast<int>(TileType::Wall)], static_cast<int>(screenCoord.x), static_cast<int>(screenCoord.y));
-				else
-				renderer.drawRect( static_cast<int>(screenCoord.x), static_cast<int>(screenCoord.y), static_cast<int>(m_tilesize.x), static_cast<int>(m_tilesize.y)
-					, 0, 0, 0);
-				break;
-			case TileType::Road:
-				if (m_tiletex[static_cast<int>(TileType::Road)] != nullptr)
-					renderer.drawImage(*m_tiletex[static_cast<int>(TileType::Road)], static_cast<int>(screenCoord.x), static_cast<int>(screenCoord.y));
-				else
-				renderer.drawRect( static_cast<int>(screenCoord.x), static_cast<int>(screenCoord.y), static_cast<int>(m_tilesize.x), static_cast<int>(m_tilesize.y)
-					, 255, 255, 255);
-				break;
+				renderer.drawImage(*tex, sx, sy);
 			}
-			
+			else 
+			{
+				renderer.drawRect(sx, sy, 32, 32, 255, 0, 255);
+			}
 		}
 	}
 }
@@ -75,6 +69,8 @@ bool Tilemap::isSolid(TileType t)
 		return true;
 	case TileType::Road:
 		return false;
+	case TileType::Door:
+		return true;
 	}
 	return true;
 }
@@ -167,7 +163,7 @@ bool Tilemap::isWrapping() const
 
 int Tilemap::wrapIndex(int i, int n) 
 {
-	return ((i % n) + n) % n;
+	return ((i % n) + n) % n;//in cpp % can be minus
 }
 
 int Tilemap::toCol(float x) const 
@@ -178,4 +174,14 @@ int Tilemap::toCol(float x) const
 int Tilemap::toRow(float y) const 
 {
 	return static_cast<int>(std::floor(y / m_tilesize.y));
+}
+
+void Tilemap::setTile(int col, int row, TileType t)
+{
+	if (m_wrap)
+	{
+		col = wrapIndex(col, m_col);
+		row = wrapIndex(row, m_row);
+	}
+	m_tiles[indexOf(col, row)] = t;
 }

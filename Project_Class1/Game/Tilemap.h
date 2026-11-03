@@ -11,6 +11,7 @@ enum class TileType
 {
 	Wall = 0,
 	Road = 1,
+	Door = 2,
 	Count
 };
 
@@ -46,6 +47,7 @@ public:
 	void setTileTexture(TileType type, const GamesEngineeringBase::Image* tex);
 	void setWrap(bool);
 	bool isWrapping() const;
+	void setTile(int col, int row, TileType t);
 
 private:
 	int m_col{64};

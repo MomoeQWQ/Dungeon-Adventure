@@ -2,6 +2,7 @@
 #include "../Entities/Turret.h"
 #include "../Entities/SpikeTrap.h"
 #include "../Entities/Pickup.h"
+#include "../Entities/Door.h"
 #include <cassert>
 
 namespace 
@@ -62,6 +63,7 @@ void Game::loadTextures()
 	//load map Tex
 	m_map.setTileTexture(TileType::Wall, m_tm.get("tile_wall"));
 	m_map.setTileTexture(TileType::Road, m_tm.get("tile_floor"));
+	m_map.setTileTexture(TileType::Door, m_tm.get("door_closed"));
 
 	//load font
 	m_font.load(m_tm.load("font", "Resources/Font/SweetSunset+SweetSunrise/spritesheets/SweetSunset_bitmap_x2_rgba.png"));
@@ -248,6 +250,8 @@ Player* Game::startLevel(const HeroDef& hero, int level)
 	m_world.add(new Pickup(Vec2{ 360.0f,160.0f }, Vec2{ 16.0f, 16.0f }, m_tm.get("potion_hp"), PickupType::Health, 30, playerPtr));
 	m_world.add(new Pickup(Vec2{ 220.0f,160.0f }, Vec2{ 16.0f, 16.0f }, m_tm.get("potion_mp"), PickupType::Mana, 30, playerPtr));
 	m_world.add(new Pickup(Vec2{ 280.0f,160.0f }, Vec2{ 16.0f, 16.0f }, m_tm.get("key"), PickupType::Key, 30, playerPtr));
+	m_world.add(new Door(20, 24, &m_map, playerPtr));
+	m_world.add(new Door(21, 24, &m_map, playerPtr));
 	m_world.add(playerPtr);
 	m_world.add(new Spawner(Vec2{ 800.0f, 300.0f }, Vec2{ 112.0f, 96.0f }, m_tm.get("spawner_new"), 100, &m_map, &m_world, playerPtr, &m_enemyDefs[0], 5.0f)); // balanced
 	m_world.add(new Spawner(Vec2{ 1500.0f, 900.0f }, Vec2{ 112.0f, 96.0f }, m_tm.get("spawner_new"), 80, &m_map, &m_world, playerPtr, &m_enemyDefs[1], 4.0f)); // fast
