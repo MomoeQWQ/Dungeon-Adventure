@@ -657,14 +657,44 @@ bool Game::loadGame(const std::string& path)
 		{
 			int defIndex{};
 			int maxHp{};
-			int interval{};
+			float interval{};
 			in >> defIndex >> maxHp >> interval;
 			if (!m_player)
 			{
 				break;
 			}
-			e = new Spawner(Vec2{}, Vec2{}, kSpawnerSize,)
+			e = new Spawner(Vec2{}, Vec2{ 112.0f,96.0f }, m_tm.get("spawner_new"), maxHp, &m_map, &m_world, m_player, &m_enemyDefs[defIndex], interval);
+			break;
 		}
+		case EntityType::Turret:
+		{
+			int maxHp{};
+			float interval{};
+			int range{};
+			in >> maxHp >> interval >> range;
+			if (!m_player)
+			{
+				break;
+			}
+			e = new Turret(Vec2{}, Vec2{ 32.0f,32.0f }, m_tm.get("trap_turret"), maxHp, &m_map, &m_world, &m_enemyShotDef, interval, range, 0);
+			break;
+		}
+		case EntityType::Pickup:
+		{
+			int typeInt{};
+			int amount{};
+			in >> typeInt >> amount;
+			if (!m_player)
+			{
+				break;
+			}
+			e = new Pickup(Vec2{}, Vec2{ 16.0f,16.0f }, m_tm.get("potion_hp"), static_cast<PickupType>(typeInt), amount, m_player);
+			break;
+		}
+		case EntityType::Door:
+		{
+			e = new Door{ 0, 0, &m_map, m_player };
+			break;
 		}
 	}
 }
