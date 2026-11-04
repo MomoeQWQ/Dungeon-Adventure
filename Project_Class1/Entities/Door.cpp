@@ -31,4 +31,9 @@ void Door::load(std::istream& in)
 {
 	Entity::load(in);
 	in >> m_open;
+	//door will be set tp door when loading, so if it's open, we need to set it to road
+	if (m_open) 
+	{
+		m_map->setTile(m_col, m_row, TileType::Road);
+	}
 }

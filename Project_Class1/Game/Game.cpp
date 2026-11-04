@@ -247,14 +247,23 @@ bool Game::prepareLevel(int level)
 	m_world.clear();
 	bool endless = (level == 1);
 	if (!m_map.loadFromFile(endless ? "Resources/map2.txt" : "Resources/map1.txt"))
-		std::cerr << "load map failure!";
+	{ 
+		std::cerr << "load map failure!"; 
+		return false;
+	}
+		
 	m_map.setWrap(endless);
 	m_camera.setClamp(!endless);
+	return true;
 }
 
 Player* Game::startLevel(const HeroDef& hero, int level)
 {
-	prepareLevel(level);
+	if (!prepareLevel(level))
+	{
+		std::cerr << "start level failure!";
+		return nullptr;
+	}
 
 	Player* playerPtr = new Player(Vec2{ 96.0f,96.0f }, &m_map, &m_input, &m_world, hero);
 	SpikeTrap* spike1 = new SpikeTrap(Vec2{ 200.0f,200.0f }, Vec2{ 32.0f, 32.0f }, m_tm.get("trap_spikes"), playerPtr, 10, true);
@@ -392,6 +401,12 @@ void Game::updateMenu()
 
 	if (m_input.wasPressed(VK_ESCAPE))
 		m_running = false;
+
+	//load
+	if (m_input.wasPressed(VK_F9))
+	{
+		loadGame("save.txt");
+	}
 }
 
 void Game::updateHelp() 
@@ -426,6 +441,12 @@ void Game::updatePlay(float dt)
 	if (m_input.wasPressed(VK_F5))
 	{
 		saveGame("save.txt");
+	}
+
+	//load
+	if (m_input.wasPressed(VK_F9)) 
+	{
+		loadGame("save.txt");
 	}
 
 	//movement of player
@@ -588,7 +609,7 @@ bool Game::saveGame(const std::string& path) const
 }
 
 
-bool Game::loadGame(const std::string& path) 
+bool Game::loadGame(const std::string& path)
 {
 	std::ifstream in{ path };
 	if (!in)
@@ -597,7 +618,7 @@ bool Game::loadGame(const std::string& path)
 		return false;
 	}
 
-	std::string magic; 
+	std::string magic;
 	int version{};
 	in >> magic >> version;
 	if (!in || magic != "DASAVE" || version != 1)
@@ -612,19 +633,19 @@ bool Game::loadGame(const std::string& path)
 	int score{};
 	int kills{};
 	in >> level >> hero >> elapsed >> score >> kills;
-	if(!in||(level!=0&&level!=1)||hero<0||hero>=kHeroCount||elapsed<0||score<0||kills<0)
+	if (!in || (level != 0 && level != 1) || hero < 0 || hero >= kHeroCount || elapsed < 0 || score < 0 || kills < 0)
 	{
 		std::cerr << "cannot open save file:bad level/hero";
 		return false;
 	}
 
-	if(!prepareLevel(level))
+	if (!prepareLevel(level))
 	{
 		std::cerr << "cannot open save file:bad map";
 		return false;
 	}
-	m_selectedHero = hero; 
-	m_selectedLevel = level; 
+	m_selectedHero = hero;
+	m_selectedLevel = level;
 	m_elapsed = elapsed;
 	m_world.setStats(score, kills);
 	m_player = nullptr;
@@ -646,7 +667,7 @@ bool Game::loadGame(const std::string& path)
 		{
 			int defIndex{};
 			in >> defIndex;
-			if(!m_player||defIndex<0||defIndex>2)
+			if (!m_player || defIndex < 0 || defIndex>2)
 			{
 				break;
 			}
@@ -670,7 +691,7 @@ bool Game::loadGame(const std::string& path)
 		{
 			int maxHp{};
 			float interval{};
-			int range{};
+			float range{};
 			in >> maxHp >> interval >> range;
 			if (!m_player)
 			{
@@ -688,13 +709,78 @@ bool Game::loadGame(const std::string& path)
 			{
 				break;
 			}
-			e = new Pickup(Vec2{}, Vec2{ 16.0f,16.0f }, m_tm.get("potion_hp"), static_cast<PickupType>(typeInt), amount, m_player);
+			switch (typeInt)
+			{
+			case static_cast<int>(PickupType::Health): {
+				e = new Pickup(Vec2{}, Vec2{ 16.0f,16.0f }, m_tm.get("potion_hp"), static_cast<PickupType>(typeInt), amount, m_player);
+				break;
+			}
+			case static_cast<int>(PickupType::Mana): {
+				e = new Pickup(Vec2{}, Vec2{ 16.0f,16.0f }, m_tm.get("potion_mp"), static_cast<PickupType>(typeInt), amount, m_player);
+				break;
+			}
+			case static_cast<int>(PickupType::Key): {
+				e = new Pickup(Vec2{}, Vec2{ 16.0f,16.0f }, m_tm.get("key"), static_cast<PickupType>(typeInt), amount, m_player);
+				break;
+			}
+			}
+			break;
+		}
+		case EntityType::Spike:
+		{
+			int damage{};
+			in >> damage;
+			if (!m_player)
+			{
+				break;
+			}
+			e = new SpikeTrap(Vec2{}, Vec2{ 32.0f,32.0f }, m_tm.get("trap_spikes"), m_player, damage, true);
+			break;
+		}
+		case EntityType::Switch:
+		{
+			if (!m_player)
+			{
+				break;
+			}
+			e = new Switch{ Vec2{}, Vec2{ 32.0f,32.0f }, m_tm.get("switch_off"), m_tm.get("switch_on"), &m_world, m_player };
 			break;
 		}
 		case EntityType::Door:
 		{
-			e = new Door{ 0, 0, &m_map, m_player };
+			int col{};
+			int row{};
+			in >> col >> row;
+			if (!m_player)
+			{
+				break;
+			}
+			e = new Door{ col, row, &m_map, m_player };
 			break;
 		}
+		default:
+		{
+			std::cerr << "cannot open save file:bad entity type";
+			break;
+		}
+		}
+		e->load(in);
+		if (!in)
+		{
+			delete e;
+			std::cerr << "cannot load save file:bad entity data";
+			break;
+		}
+		m_world.addWithId(e, id);//not add, cuz we need to keep the same id as before
 	}
+
+	//after loop
+	if (m_player == nullptr)
+	{
+		m_world.clear();
+		std::cerr << "cannot load save file:player not found";
+		return false;
+	}
+	m_state = GameState::Play;
+	return true;
 }
