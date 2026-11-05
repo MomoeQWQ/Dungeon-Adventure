@@ -1,5 +1,7 @@
 #pragma once
 
+
+//FPS counter class, responsible for calculating and providing the current frames per second (FPS) of the game
 class FpsCounter
 {
 public:

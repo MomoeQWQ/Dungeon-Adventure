@@ -7,6 +7,7 @@
 class Tilemap;
 class World;
 
+//Projectile class, derived from Entity, represents a projectile entity in the game that can be fired by players or enemies
 class Projectile : public Entity
 {
 public:

@@ -2,6 +2,7 @@
 #include"../GamesEngineeringBase.h"
 #include <algorithm>
 
+//Renderer class, responsible for rendering graphics on the screen, including clearing the screen, presenting the rendered content, drawing rectangles, and drawing images with optional source rectangle for sprite frames
 class Renderer
 {
 public:

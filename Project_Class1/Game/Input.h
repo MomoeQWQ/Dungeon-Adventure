@@ -1,6 +1,7 @@
 #pragma once
 #include "../GamesEngineeringBase.h"
 
+//Input.h
 class Input {
 public:
 	static constexpr int kKeyCount{ 256 };

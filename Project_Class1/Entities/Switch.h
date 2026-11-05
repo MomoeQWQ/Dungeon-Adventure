@@ -5,6 +5,7 @@
 #include "../GamesEngineeringBase.h"
 #include <cassert>
 
+//Switch class, derived from Entity, represents a switch entity in the game that can be activated by the player to trigger certain actions in the game world
 class Switch : public Entity
 {
 public:

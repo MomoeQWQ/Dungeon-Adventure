@@ -3,6 +3,7 @@
 #include"Character.h"
 #include"../Core/Vec2.h"
 
+//SpikeTrap class, derived from Entity, represents a spike trap entity in the game that can damage a target character when triggered
 class SpikeTrap : public Entity
 {
 public:

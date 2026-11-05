@@ -9,6 +9,7 @@ enum class SkillType
 	Magic
 };
 
+//HeroDef struct, used to define the properties of a hero type, including size, hitbox, texture, health, speed, attack damage, attack box, attack cooldown, shooting projectile, shooting cooldown, skill type, skill cooldown, skill duration, skill magnitude, magic projectile, maximum mana, skill mana cost, and mana regeneration
 struct HeroDef
 {
 	//appearance&tex

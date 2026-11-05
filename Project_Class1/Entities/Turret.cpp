@@ -1,15 +1,17 @@
 #include "Turret.h"
 #include "Entity.h"
 #include "Projectile.h"
+#include <iostream>
 
 void Turret::onUpdate(float dt) 
 {
 	m_timer -= dt;
+	auto np = m_world->nearestPlayer(getCenter());
 	if (m_timer > 0.0f)
 		return;
-	if (m_world->nearestPlayer(getCenter()) == nullptr)
+	if (np == nullptr)
 		return;
-	Entity* target = m_world->nearestPlayer(getCenter());
+	Entity* target = np;
 	float dx = target->getCenter().x - getCenter().x;
 	float dy = target->getCenter().y - getCenter().y;
 	if (m_range < dx * dx + dy * dy)
@@ -32,11 +34,11 @@ void Turret::saveKey(std::ostream& out) const
 void Turret::save(std::ostream& out) const
 {
 	Character::save(out);
-	out << m_timer << ' ' << m_targetId << ' ';
+	out << m_timer << ' ' ;
 }
 
 void Turret::load(std::istream& in) 
 {
 	Character::load(in);
-	in >> m_timer >> m_targetId;
+	in >> m_timer;
 }

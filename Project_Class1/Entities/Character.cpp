@@ -1,6 +1,7 @@
 #include "Character.h"
 #include <algorithm>
 #include <cassert>
+#include <iostream>
 
 void Character::takeDamage(int damage)
 {

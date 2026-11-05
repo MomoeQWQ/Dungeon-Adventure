@@ -6,6 +6,7 @@
 
 enum class PickupType { Health, Mana, Key };
 
+//Pickup class, derived from Entity, represents a pickup item in the game that can be collected by the player to gain health, mana, or keys
 class Pickup : public Entity
 {
 public:

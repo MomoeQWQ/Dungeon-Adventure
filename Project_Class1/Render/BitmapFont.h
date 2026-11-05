@@ -4,6 +4,7 @@
 #include "Renderer.h"
 #include <string>
 
+//BitmapFont class, responsible for loading a bitmap font image and rendering text using that font
 class BitmapFont
 {
 public:

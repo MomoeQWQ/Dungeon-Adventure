@@ -3,6 +3,7 @@
 #include "../Core/DynamicArray.h"
 #include <string>
 
+//TextureManager class, responsible for loading and managing textures in the game, allowing them to be loaded from files and retrieved by name
 class TextureManager
 {
 public:

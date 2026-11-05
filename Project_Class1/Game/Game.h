@@ -20,6 +20,7 @@
 #include <iostream>
 #include <string>
 
+//main game class, responsible for running the game loop and managing the game state
 class Game
 {
 public:
@@ -53,7 +54,7 @@ private:
 	Tilemap m_map{ 64,48,Vec2{ 32.0f,32.0f } };//default tilemap
 
 	//Camera init(int worldWidth, int worldHeight,int screenWidth,int screenHeight)
-	//We need to create camera after map cuz it relies on the latter one
+	//We need to create camera after map because it relies on the latter one
 	//since now we haven't init the map, use k-numbers to init camera
 	Camera m_camera{ kScreenW, kScreenH, static_cast<int>(m_canvas.getWidth()), static_cast<int>(m_canvas.getHeight()) };
 
@@ -63,7 +64,7 @@ private:
 	HeroDef m_heroDefs[kHeroCount];
 	ProjectileDef m_enemyShotDef{};
 
-	//world must be defined after def, cuz we have pointers linked to entities in def
+	//world must be defined after def, because we have pointers linked to entities in def
 	World m_world{};
 
 	//Game

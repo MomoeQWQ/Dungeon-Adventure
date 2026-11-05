@@ -1,6 +1,7 @@
 #pragma once
 #include "../Core/Vec2.h"
 
+//Camera class, responsible for managing the camera's position and view in the game world, allowing it to follow a target and convert world coordinates to screen coordinates
 class Camera
 {
 public:

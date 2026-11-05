@@ -3,6 +3,7 @@
 #include "EnemyDef.h"
 #include "../Game/World.h"
 
+//Enemy class, derived from Character, represents an enemy entity in the game
 class Enemy : public Character
 {
 public:

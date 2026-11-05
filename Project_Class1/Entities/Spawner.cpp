@@ -1,6 +1,7 @@
 #include "Spawner.h"
 #include "Enemy.h"
 #include "../Game/World.h"
+#include <iostream>
 
 void Spawner::onUpdate(float dt)
 {

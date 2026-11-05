@@ -14,6 +14,7 @@ enum class Team
 	Enemy
 };
 
+//Base class for all entities in the game, including Characters, projectiles, doors, etc.
 class Entity
 {
 public:

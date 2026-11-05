@@ -3,6 +3,7 @@
 #include "../Game/Tilemap.h"
 #include <cassert>
 
+//Base class for all characters in the game, including players and enemies, etc.
 class Character : public Entity
 {
 public:

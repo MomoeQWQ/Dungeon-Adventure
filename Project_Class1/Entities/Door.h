@@ -4,6 +4,8 @@
 #include "Player.h"
 #include <cassert>
 
+
+//door entity, can be opened by player with key
 class Door : public Entity
 {
 public:

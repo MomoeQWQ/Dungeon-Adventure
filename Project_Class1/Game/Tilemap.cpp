@@ -183,5 +183,7 @@ void Tilemap::setTile(int col, int row, TileType t)
 		col = wrapIndex(col, m_col);
 		row = wrapIndex(row, m_row);
 	}
+	if (col < 0 || row < 0 || col >= m_col || row >= m_row)
+		return;
 	m_tiles[indexOf(col, row)] = t;
 }

@@ -1,6 +1,7 @@
 #include "Switch.h"
 #include "Entity.h"
 #include <cassert>
+#include <iostream>
 
 void Switch::update(float dt)
 {

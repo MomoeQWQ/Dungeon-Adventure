@@ -5,8 +5,8 @@ void Camera::follow(Vec2 target)
 	m_position.x = target.x - (m_screenWidth/2);
 	m_position.y = target.y - (m_screenHeight / 2);
 	if(m_clamp){
-		float maxX = m_worldWidth - m_screenWidth;
-		float maxY = m_worldHeight - m_screenHeight;
+		float maxX = static_cast<float>(m_worldWidth - m_screenWidth);
+		float maxY = static_cast<float>(m_worldHeight - m_screenHeight);
 		if (m_position.x < 0)
 			m_position.x = 0;//if world is less than screen, now we display it on top-left
 		if (m_position.x > maxX)

@@ -6,6 +6,7 @@ class Renderer;
 class Camera;
 class Character;
 
+//World class, responsible for managing all entities in the game world, including adding, updating, drawing, and querying entities
 class World
 {
 public:

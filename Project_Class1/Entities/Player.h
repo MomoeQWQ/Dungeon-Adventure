@@ -10,6 +10,7 @@
 class World;
 class Projectile;
 
+//Player class, derived from Character, represents a player entity in the game
 class Player : public Character
 {
 public:

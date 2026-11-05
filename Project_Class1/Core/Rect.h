@@ -1,4 +1,5 @@
 #pragma once
+//simple rect struct for collision detection
 struct Rect
 {
 	float x;

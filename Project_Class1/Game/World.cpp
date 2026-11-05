@@ -15,7 +15,7 @@ World::~World()
 
 void World::add(Entity* e) 
 {
-	assert(e != nullptr && "enetity cannot be nullptr");
+	assert(e != nullptr && "entity cannot be nullptr");
 	e->setId(m_nextId++);//set entity id
 	m_entities.push_back(e);
 }
@@ -80,7 +80,7 @@ bool World::damageArea(const Rect& area, int damage, Team attacker)
 }
 
 //design Id to search magic bullet target by index, aiming at avoiding pointer to visit released memories
-//cuz now we visit Id(int) instead of pointer
+//because now we visit Id(int) instead of pointer
 Entity* World::findById(int id) const
 {
 	for (int i = 0;i < m_entities.getSize();i++) 
@@ -178,7 +178,7 @@ int World::getKills() const
 // S/L methods
 void World::addWithId(Entity* e, int id) 
 {
-	assert(e != nullptr && "enetity cannot be nullptr");
+	assert(e != nullptr && "entity cannot be nullptr");
 	e->setId(id);
 	m_entities.push_back(e);
 	m_nextId = std::max(m_nextId, id + 1);//avoid repeating Id after SL

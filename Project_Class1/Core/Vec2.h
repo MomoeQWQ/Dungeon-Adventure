@@ -1,6 +1,7 @@
 #pragma once
 #include<cmath>
 
+//2D vector struct, used for position, velocity, and other 2D vector operations
 struct Vec2 {
 	float x;
 	float y;

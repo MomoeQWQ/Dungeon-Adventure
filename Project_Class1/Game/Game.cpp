@@ -244,7 +244,7 @@ void Game::setupDefs()
 
 }
 
-//seperated from startLevel, cuz also used in loadGame
+//separated from startLevel, because also used in loadGame
 bool Game::prepareLevel(int level)
 {
 	m_world.clear();
@@ -285,9 +285,9 @@ Player* Game::startLevel(const HeroDef& hero, int level)
 	m_world.add(new Pickup(Vec2{ 280.0f,160.0f }, Vec2{ 16.0f, 16.0f }, m_tm.get("key"), PickupType::Key, 1, p1Ptr));
 	m_world.add(new Door(20, 24, &m_map, p1Ptr));
 	m_world.add(new Door(21, 24, &m_map, p1Ptr));
-	m_world.add(new Spawner(Vec2{ 800.0f, 300.0f }, Vec2{ 112.0f, 96.0f }, m_tm.get("spawner_new"), 100, &m_map, &m_world, p1Ptr, &m_enemyDefs[0], 5.0f)); // balanced
-	m_world.add(new Spawner(Vec2{ 1500.0f, 900.0f }, Vec2{ 112.0f, 96.0f }, m_tm.get("spawner_new"), 80, &m_map, &m_world, p1Ptr, &m_enemyDefs[1], 4.0f)); // fast
-	m_world.add(new Spawner(Vec2{ 400.0f, 1200.0f }, Vec2{ 112.0f, 96.0f }, m_tm.get("spawner_new"), 150, &m_map, &m_world, p1Ptr, &m_enemyDefs[2], 8.0f)); // tanky
+	m_world.add(new Spawner(Vec2{ 800.0f, 300.0f }, Vec2{ 112.0f, 96.0f }, m_tm.get("spawner_new"), 100, &m_map, &m_world,&m_enemyDefs[0], 5.0f)); // balanced
+	m_world.add(new Spawner(Vec2{ 1500.0f, 900.0f }, Vec2{ 112.0f, 96.0f }, m_tm.get("spawner_new"), 80, &m_map, &m_world, &m_enemyDefs[1], 4.0f)); // fast
+	m_world.add(new Spawner(Vec2{ 400.0f, 1200.0f }, Vec2{ 112.0f, 96.0f }, m_tm.get("spawner_new"), 150, &m_map, &m_world, &m_enemyDefs[2], 8.0f)); // tanky
 	m_world.add(p1Ptr);
 	if (m_twoPlayer)
 	{
@@ -296,7 +296,7 @@ Player* Game::startLevel(const HeroDef& hero, int level)
 		m_world.add(p2Ptr);
 	}
 
-	m_world.add(new Turret(Vec2{ 300.0f,300.0f }, Vec2{ 32.0f, 32.0f }, m_tm.get("trap_turret"), 60, &m_map, &m_world, &m_enemyShotDef, 1.5, 160000, p1Ptr->getId()));
+	m_world.add(new Turret(Vec2{ 300.0f,300.0f }, Vec2{ 32.0f, 32.0f }, m_tm.get("trap_turret"), 60, &m_map, &m_world, &m_enemyShotDef, 1.5, 160000));
 	
 	return p1Ptr;
 };
@@ -327,7 +327,7 @@ void Game::drawHud()
 
 	//draw Hp/Mana bar
 	m_font.drawText(m_renderer, "^", 10, 10);
-	drawBar(m_font.measureText("^") + 20, 20, 200, 30, m_player->getHp(), m_player->getMaxHp(), 244, 128, 128);
+	drawBar(m_font.measureText("^") + 20, 20, 200, 30, static_cast<float>(m_player->getHp()), static_cast<float>(m_player->getMaxHp()), 244, 128, 128);
 	m_renderer.drawImage(*m_tm.get("potion_mp") ,10, 65);
 	drawBar(m_font.measureText("^") + 20, 58, 200, 30, m_player->getMana(), m_player->getMaxMana(), 70, 130, 230);
 
@@ -350,7 +350,7 @@ void Game::drawHud()
 		//draw p2 Hp/Mana bar
 		int startX = m_camera.getScreenWidth() - 400;
 		m_font.drawText(m_renderer, "^", startX, 80);
-		drawBar(startX + m_font.measureText("^") + 20, 80, 200, 30, m_player2->getHp(), m_player2->getMaxHp(), 244, 128, 128);
+		drawBar(startX + m_font.measureText("^") + 20, 80, 200, 30, static_cast<float>(m_player2->getHp()), static_cast<float>(m_player2->getMaxHp()), 244, 128, 128);
 		m_renderer.drawImage(*m_tm.get("potion_mp"), startX, 125);
 		drawBar(startX + m_font.measureText("^") + 20, 118, 200, 30, m_player2->getMana(), m_player2->getMaxMana(), 70, 130, 230);
 	}
@@ -469,9 +469,6 @@ void Game::updatePlay(float dt)
 		m_state = GameState::Menu;
 	}
 
-	//before restrict dt,use raw dt to update fps
-	m_fps.update(dt);
-
 	if (dt > 0.05f)
 		dt = 0.05f;
 	m_elapsed += dt;
@@ -547,15 +544,7 @@ void Game::updatePlay(float dt)
 	//draw map
 	m_map.draw(m_renderer, m_camera);
 
-	//test: drawbound / draw attck box
-	//Rect bounds = playerPtr->getBounds();
-	//Vec2 leftp = Vec2{ camera.worldToScreen(Vec2{ bounds.x,bounds.y }) };
-	//renderer.drawRect(leftp.x, leftp.y, bounds.w, bounds.h, 255, 0, 0);
-	//Rect attackBox = m_player->m_range;
-	//Vec2 leftp = Vec2{ m_camera.worldToScreen(Vec2{ attackBox.x,attackBox.y }) };
-	//m_renderer.drawRect(leftp.x, leftp.y, attackBox.w, attackBox.h, 255, 0, 0);
-
-	//draw player
+	//draw world
 	m_world.draw(m_renderer, m_camera);
 
 	//draw Hud
@@ -616,6 +605,9 @@ void Game::run()
 		//clear canvas
 		m_renderer.clear();
 
+		//before restrict dt,use raw dt to update fps
+		m_fps.update(dt);
+
 		//switch state
 		switch (m_state) {
 		case GameState::Intro:
@@ -650,7 +642,7 @@ void Game::run()
 
 		}
 
-		//draw fps(we need fps throughout the game, so it in not included in the function drawHud)
+		//draw fps(we need fps throughout the game, so it is not included in the function drawHud)
 		//instead, it's here
 		m_font.drawText(m_renderer, "FPS: " + std::to_string(m_fps.getFps()), m_camera.getScreenWidth() - m_font.measureText("FPS: 1000") - 10, 10);
 
@@ -683,7 +675,7 @@ bool Game::saveGame(const std::string& path) const
 		return false;
 	}
 	out << std::setprecision(9);
-	out << "DASAVE 1" << '\n';
+	out << "DASAVE 2" << '\n';
 	out << m_selectedLevel << ' ' << m_selectedHero << ' ' << m_elapsed << ' ' << m_world.getScore() << ' ' << m_world.getKills() << ' ' << '\n';
 	writeEntity(out, *m_player);
 	for(int i=0;i<m_world.getCount();i++)
@@ -694,7 +686,7 @@ bool Game::saveGame(const std::string& path) const
 		if (!e->isAlive())
 			continue;
 		/*
-		below is designed deliberately, cuz Projectiles don't save which def they're generated from
+		below is designed deliberately, because Projectiles don't save which def they're generated from
 		if we'd like to save them,we have to give every projectile an index
 		but they only have at most 3 second life,so I give up saving them
 		*/
@@ -708,8 +700,6 @@ bool Game::saveGame(const std::string& path) const
 
 bool Game::loadGame(const std::string& path)
 {
-	m_player2 = nullptr;
-	m_twoPlayer = false;
 	std::ifstream in{ path };
 	if (!in)
 	{
@@ -720,7 +710,7 @@ bool Game::loadGame(const std::string& path)
 	std::string magic;
 	int version{};
 	in >> magic >> version;
-	if (!in || magic != "DASAVE" || version != 1)
+	if (!in || magic != "DASAVE" || version != 2)
 	{
 		std::cerr << "cannot open save file:bad header";
 		return false;
@@ -743,6 +733,9 @@ bool Game::loadGame(const std::string& path)
 		std::cerr << "cannot open save file:bad map";
 		return false;
 	}
+
+	m_player2 = nullptr;
+	m_twoPlayer = false;
 	m_selectedHero = hero;
 	m_selectedLevel = level;
 	m_elapsed = elapsed;
@@ -751,6 +744,7 @@ bool Game::loadGame(const std::string& path)
 
 	int typeInt{};
 	int id{};
+	bool ok{ true };
 	while (in >> typeInt >> id)
 	{
 		Entity* e = nullptr;
@@ -779,11 +773,11 @@ bool Game::loadGame(const std::string& path)
 			int maxHp{};
 			float interval{};
 			in >> defIndex >> maxHp >> interval;
-			if (!m_player)
+			if (!m_player || maxHp <= 0 || interval <= 0 || defIndex <0 || defIndex > 3)
 			{
 				break;
 			}
-			e = new Spawner(Vec2{}, Vec2{ 112.0f,96.0f }, m_tm.get("spawner_new"), maxHp, &m_map, &m_world, m_player, &m_enemyDefs[defIndex], interval);
+			e = new Spawner(Vec2{}, Vec2{ 112.0f,96.0f }, m_tm.get("spawner_new"), maxHp, &m_map, &m_world, &m_enemyDefs[defIndex], interval);
 			break;
 		}
 		case EntityType::Turret:
@@ -796,7 +790,7 @@ bool Game::loadGame(const std::string& path)
 			{
 				break;
 			}
-			e = new Turret(Vec2{}, Vec2{ 32.0f,32.0f }, m_tm.get("trap_turret"), maxHp, &m_map, &m_world, &m_enemyShotDef, interval, range, 0);
+			e = new Turret(Vec2{}, Vec2{ 32.0f,32.0f }, m_tm.get("trap_turret"), maxHp, &m_map, &m_world, &m_enemyShotDef, interval, range);
 			break;
 		}
 		case EntityType::Pickup:
@@ -804,7 +798,7 @@ bool Game::loadGame(const std::string& path)
 			int typeInt{};
 			int amount{};
 			in >> typeInt >> amount;
-			if (!m_player)
+			if (!m_player || typeInt < 0 || typeInt > 2)
 			{
 				break;
 			}
@@ -863,23 +857,37 @@ bool Game::loadGame(const std::string& path)
 			break;
 		}
 		}
+		if (!e) 
+		{
+			ok = false;
+			std::cerr << "bad entity type in save file";
+			break;
+		}
 		e->load(in);
+
 		if (!in)
 		{
 			delete e;
+			ok = false;
 			std::cerr << "cannot load save file:bad entity data";
 			break;
 		}
-		m_world.addWithId(e, id);//not add, cuz we need to keep the same id as before
+		m_world.addWithId(e, id);//not add, because we need to keep the same id as before
 	}
 
 	//after loop
 	if (m_player == nullptr)
+		ok = false;
+	if(!ok)
 	{
 		m_world.clear();
-		std::cerr << "cannot load save file:player not found";
+		m_state = GameState::Menu;
+		m_player = nullptr;
+		m_player2 = nullptr;
+		std::cerr << "loading game failed";
 		return false;
 	}
+
 	m_state = GameState::Play;
 	return true;
 }

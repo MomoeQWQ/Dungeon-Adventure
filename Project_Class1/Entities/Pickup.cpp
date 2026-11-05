@@ -1,4 +1,5 @@
 #include "Pickup.h"
+#include <iostream>
 
 void Pickup::update(float dt) 
 {

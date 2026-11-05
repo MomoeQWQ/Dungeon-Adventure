@@ -4,17 +4,17 @@
 #include "../Game/World.h"
 #include <cassert>
 
+//Turret class, derived from Character, represents a turret entity in the game that can shoot projectiles at a specified interval and range
 class Turret:public Character
 {
 public:
 	Turret(Vec2 pos, Vec2 size, const GamesEngineeringBase::Image* tex, int maxHp, const Tilemap* map, World* world, ProjectileDef* shot,
-		float interval,float range,int targetId)
+		float interval,float range)
 		: Character(pos,size,tex,maxHp,map)
 		, m_world{world}
 		, m_shot{shot}
 		, m_interval{interval}
 		, m_range{range}
-		, m_targetId{targetId}
 	{
 		m_timer = interval;
 		m_team = Team::Enemy;
@@ -36,8 +36,6 @@ private:
 	float m_interval;
 	float m_timer{0.0f};
 	float m_range;
-	int m_targetId;
-
 
 	void onUpdate(float dt) override;
 };

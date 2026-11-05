@@ -3,6 +3,7 @@
 #include "../Render/Renderer.h"
 #include "../Game/World.h"
 #include <algorithm>
+#include <iostream>
 
 Projectile* Player::spawnProjectile(const ProjectileDef& def) const 
 {

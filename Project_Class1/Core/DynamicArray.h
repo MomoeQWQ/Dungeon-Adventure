@@ -1,7 +1,7 @@
 #pragma once
 #include <cassert>
-#include <iostream>//for test
 
+//DynamicArray, a simple implementation of dynamic array, similar to std::vector
 template <typename T>
 class DynamicArray {
 public:
@@ -53,14 +53,6 @@ public:
 	//push and pop
 	void push_back(const T&);
 	T pop_back();
-
-	//print, make it easier test
-	void print() const{
-		for (int i{ 0 };i < m_size;i++) {
-			std::cout << m_arrayptr[i] << "\t";
-		}
-		std::cout << std::endl;
-	}
 
 	//additional, designed for World::clear
 	//clear, not release, next push_back will overwrite

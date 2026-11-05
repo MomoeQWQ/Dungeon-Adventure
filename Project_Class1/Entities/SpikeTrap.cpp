@@ -1,4 +1,5 @@
 #include "SpikeTrap.h"
+#include <iostream>
 
 void SpikeTrap::update(float dt)
 {

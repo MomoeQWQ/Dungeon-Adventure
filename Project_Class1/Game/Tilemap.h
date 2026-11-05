@@ -15,6 +15,7 @@ enum class TileType
 	Count
 };
 
+//Tilemap class, represents a tile-based map in the game, responsible for managing the tiles, their types, and rendering them on the screen
 class Tilemap
 {
 public:

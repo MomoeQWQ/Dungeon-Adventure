@@ -1,6 +1,7 @@
 #include "Enemy.h"
 #include "Entity.h"
 #include <cassert>
+#include <iostream>
 
 void Enemy::onUpdate(float dt)
 {

@@ -33,13 +33,12 @@ const GamesEngineeringBase::Image* TextureManager::load(const std::string& name,
 	if (!newImage->load(path)) 
 	{
 		delete newImage;
-		std::cout << name << " loading failure happens in " << path << std::endl;
+		std::cerr << name << " loading failure happens in " << path << std::endl;
 		return nullptr;
 	}
 
 	m_names.push_back(name);
 	m_images.push_back(newImage);
-	std::cout << "loaded " << name << std::endl;
 	return newImage;
 }
 
