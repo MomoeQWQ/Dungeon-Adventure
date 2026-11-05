@@ -4,6 +4,7 @@
 
 class Renderer;
 class Camera;
+class Character;
 
 class World
 {
@@ -30,11 +31,14 @@ public:
 	Entity* getAt(int i) const;
 	void setStats(int score, int kills);
 
+	//for P2
+	Character* nearestPlayer(Vec2 from) const;
+
 private:
 	DynamicArray<Entity*> m_entities{};
 	int m_nextId{ 0 };
 	int m_score{ 0 };
 	int m_kills{ 0 };
-
+	
 	void removeDead();//World determines when to remove
 };

@@ -4,6 +4,7 @@
 #include "../Core/Vec2.h"
 #include "Character.h"
 #include "HeroDef.h"
+#include "../Game/KeyBindings.h"
 #include <cassert>
 
 class World;
@@ -12,12 +13,13 @@ class Projectile;
 class Player : public Character
 {
 public:
-	Player(Vec2 pos, const Tilemap* map, const Input* input, World* world, const HeroDef& def)
+	Player(Vec2 pos, const Tilemap* map, const Input* input, World* world, const HeroDef& def, const KeyBindings& bind)
 		: Character{pos,def.size,def.tex,def.maxHp,map}
 		, m_input{input}
 		, m_world{world}
 		, m_def{&def}
 		, m_mana{def.maxMana}
+		, m_bind{ &bind }
 	{
 		assert(input != nullptr && "nullptr input cannot be accepted to create a Player!");
 		assert(world != nullptr && "nullptr world cannot be accepted to create a Player!");
@@ -49,6 +51,7 @@ private:
 	Vec2 m_facing{ 1.0f,0.0f };
 	float m_mana{};
 	int m_keys{};
+	const KeyBindings* m_bind{};
 
 	// Timer
 	float m_meleeTimer{ 0.0f };

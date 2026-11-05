@@ -11,7 +11,7 @@ void Spawner::onUpdate(float dt)
 	m_timer += dt;
 	if (m_timer >= m_interval) 
 	{
-		m_world->add(new Enemy(m_position, getMap(), m_target, *m_def));
+		m_world->add(new Enemy(m_position, getMap(), m_world, *m_def));
 		m_timer -= m_interval;
 	}
 }

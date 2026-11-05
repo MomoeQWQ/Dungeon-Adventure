@@ -7,9 +7,9 @@ void Turret::onUpdate(float dt)
 	m_timer -= dt;
 	if (m_timer > 0.0f)
 		return;
-	if (m_world->findById(m_targetId) == nullptr)
+	if (m_world->nearestPlayer(getCenter()) == nullptr)
 		return;
-	Entity* target = m_world->findById(m_targetId);
+	Entity* target = m_world->nearestPlayer(getCenter());
 	float dx = target->getCenter().x - getCenter().x;
 	float dy = target->getCenter().y - getCenter().y;
 	if (m_range < dx * dx + dy * dy)

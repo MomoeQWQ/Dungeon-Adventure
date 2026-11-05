@@ -185,6 +185,7 @@
     <ClInclude Include="Game\Game.h" />
     <ClInclude Include="Game\GameState.h" />
     <ClInclude Include="Game\Input.h" />
+    <ClInclude Include="Game\KeyBindings.h" />
     <ClInclude Include="Game\Tilemap.h" />
     <ClInclude Include="Game\World.h" />
     <ClInclude Include="Render\BitmapFont.h" />

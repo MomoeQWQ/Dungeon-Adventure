@@ -1,6 +1,7 @@
 #include "World.h"
 #include "../Render/Renderer.h"
 #include "../Render/Camera.h"
+#include "../Entities/Character.h"
 #include <cassert>
 #include <algorithm>
 
@@ -182,4 +183,26 @@ void World::setStats(int score, int kills)
 {
 	m_score = score;
 	m_kills = kills;
+}
+
+Character* World::nearestPlayer(Vec2 from) const 
+{
+	Character* best = nullptr;
+	float bestD2 = 1e30f;
+	for (int i = 0; i < m_entities.getSize(); i++) {
+		Entity* e = m_entities[i];
+		if (e->getType() != EntityType::Player)
+			continue;
+		Character* c = static_cast<Character*>(e);
+		if (c->isDead())
+			continue;
+		Vec2 d = c->getCenter() - from;
+		float d2 = d.x * d.x + d.y * d.y;
+		if (d2 < bestD2)
+		{
+			bestD2 = d2;
+			best = c;
+		}
+	}
+	return best;
 }

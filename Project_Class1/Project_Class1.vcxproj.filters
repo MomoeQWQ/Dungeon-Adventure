@@ -188,6 +188,9 @@
     <ClInclude Include="Entities\EntityType.h">
       <Filter>Header Files\Entity</Filter>
     </ClInclude>
+    <ClInclude Include="Game\KeyBindings.h">
+      <Filter>Header Files\Game</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\A.png">

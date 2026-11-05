@@ -37,6 +37,8 @@ private:
 	static constexpr int kScreenH = 768;;
 	static constexpr const char* heroNames[kHeroCount] = { "Warrior", "Ranger", "Mage" };
 	static constexpr const char* levelNames[2] = { "Fixed", "Endless" };
+	static constexpr KeyBindings kP1Keys{ 'W', 'S', 'A', 'D', 'J', 'K', 'L' };
+	static constexpr KeyBindings kP2Keys{ VK_UP, VK_DOWN, VK_LEFT, VK_RIGHT, VK_NUMPAD1, VK_NUMPAD2, VK_NUMPAD3 };
 
 	//engine & render & world
 	GamesEngineeringBase::Window m_canvas;
@@ -72,6 +74,10 @@ private:
 	bool m_won{ false };
 	float m_elapsed{ 0.0f };
 	Player* m_player{ nullptr };
+
+	//multiple players
+	Player* m_player2{ nullptr };
+	bool m_twoPlayer{ false };
 
 	//load Game(for S/L)
 	bool loadGame(const std::string& path);

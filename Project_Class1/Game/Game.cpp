@@ -25,7 +25,8 @@ namespace
 		"Survive 120 seconds to win.",
 		"Destroy spawners to stop enemies.",
 		"",
-		"Press Esc to return"
+		"Press Esc to return",
+		"Press F5 to save, F9 to load"
 	}; 
 }
 
@@ -245,6 +246,7 @@ void Game::setupDefs()
 bool Game::prepareLevel(int level)
 {
 	m_world.clear();
+	m_player2 = nullptr;
 	bool endless = (level == 1);
 	if (!m_map.loadFromFile(endless ? "Resources/map2.txt" : "Resources/map1.txt"))
 	{ 
@@ -265,10 +267,10 @@ Player* Game::startLevel(const HeroDef& hero, int level)
 		return nullptr;
 	}
 
-	Player* playerPtr = new Player(Vec2{ 96.0f,96.0f }, &m_map, &m_input, &m_world, hero);
-	SpikeTrap* spike1 = new SpikeTrap(Vec2{ 200.0f,200.0f }, Vec2{ 32.0f, 32.0f }, m_tm.get("trap_spikes"), playerPtr, 10, true);
-	SpikeTrap* spike2 = new SpikeTrap(Vec2{ 200.0f,400.0f }, Vec2{ 32.0f, 32.0f }, m_tm.get("trap_spikes"), playerPtr, 10, true);
-	Switch* sw = new Switch{ Vec2{ 150.0f,250.0f }, Vec2{ 32.0f, 32.0f } ,m_tm.get("switch_off") ,m_tm.get("switch_on") ,&m_world ,playerPtr };
+	Player* p1Ptr = new Player(Vec2{ 96.0f,96.0f }, &m_map, &m_input, &m_world, hero, kP1Keys);
+	SpikeTrap* spike1 = new SpikeTrap(Vec2{ 200.0f,200.0f }, Vec2{ 32.0f, 32.0f }, m_tm.get("trap_spikes"), p1Ptr, 10, true);
+	SpikeTrap* spike2 = new SpikeTrap(Vec2{ 200.0f,400.0f }, Vec2{ 32.0f, 32.0f }, m_tm.get("trap_spikes"), p1Ptr, 10, true);
+	Switch* sw = new Switch{ Vec2{ 150.0f,250.0f }, Vec2{ 32.0f, 32.0f } ,m_tm.get("switch_off") ,m_tm.get("switch_on") ,&m_world ,p1Ptr };
 	
 
 	m_world.add(spike1);
@@ -276,18 +278,25 @@ Player* Game::startLevel(const HeroDef& hero, int level)
 	sw->addTarget(spike1->getId());
 	sw->addTarget(spike2->getId());
 	m_world.add(sw);
-	m_world.add(new Pickup(Vec2{ 360.0f,160.0f }, Vec2{ 16.0f, 16.0f }, m_tm.get("potion_hp"), PickupType::Health, 30, playerPtr));
-	m_world.add(new Pickup(Vec2{ 220.0f,160.0f }, Vec2{ 16.0f, 16.0f }, m_tm.get("potion_mp"), PickupType::Mana, 30, playerPtr));
-	m_world.add(new Pickup(Vec2{ 280.0f,160.0f }, Vec2{ 16.0f, 16.0f }, m_tm.get("key"), PickupType::Key, 1, playerPtr));
-	m_world.add(new Door(20, 24, &m_map, playerPtr));
-	m_world.add(new Door(21, 24, &m_map, playerPtr));
-	m_world.add(new Spawner(Vec2{ 800.0f, 300.0f }, Vec2{ 112.0f, 96.0f }, m_tm.get("spawner_new"), 100, &m_map, &m_world, playerPtr, &m_enemyDefs[0], 5.0f)); // balanced
-	m_world.add(new Spawner(Vec2{ 1500.0f, 900.0f }, Vec2{ 112.0f, 96.0f }, m_tm.get("spawner_new"), 80, &m_map, &m_world, playerPtr, &m_enemyDefs[1], 4.0f)); // fast
-	m_world.add(new Spawner(Vec2{ 400.0f, 1200.0f }, Vec2{ 112.0f, 96.0f }, m_tm.get("spawner_new"), 150, &m_map, &m_world, playerPtr, &m_enemyDefs[2], 8.0f)); // tanky
-	m_world.add(playerPtr);
-	m_world.add(new Turret(Vec2{ 300.0f,300.0f }, Vec2{ 32.0f, 32.0f }, m_tm.get("trap_turret"), 60, &m_map, &m_world, &m_enemyShotDef, 1.5, 160000, playerPtr->getId()));
+	m_world.add(new Pickup(Vec2{ 360.0f,160.0f }, Vec2{ 16.0f, 16.0f }, m_tm.get("potion_hp"), PickupType::Health, 30, p1Ptr));
+	m_world.add(new Pickup(Vec2{ 220.0f,160.0f }, Vec2{ 16.0f, 16.0f }, m_tm.get("potion_mp"), PickupType::Mana, 30, p1Ptr));
+	m_world.add(new Pickup(Vec2{ 280.0f,160.0f }, Vec2{ 16.0f, 16.0f }, m_tm.get("key"), PickupType::Key, 1, p1Ptr));
+	m_world.add(new Door(20, 24, &m_map, p1Ptr));
+	m_world.add(new Door(21, 24, &m_map, p1Ptr));
+	m_world.add(new Spawner(Vec2{ 800.0f, 300.0f }, Vec2{ 112.0f, 96.0f }, m_tm.get("spawner_new"), 100, &m_map, &m_world, p1Ptr, &m_enemyDefs[0], 5.0f)); // balanced
+	m_world.add(new Spawner(Vec2{ 1500.0f, 900.0f }, Vec2{ 112.0f, 96.0f }, m_tm.get("spawner_new"), 80, &m_map, &m_world, p1Ptr, &m_enemyDefs[1], 4.0f)); // fast
+	m_world.add(new Spawner(Vec2{ 400.0f, 1200.0f }, Vec2{ 112.0f, 96.0f }, m_tm.get("spawner_new"), 150, &m_map, &m_world, p1Ptr, &m_enemyDefs[2], 8.0f)); // tanky
+	m_world.add(p1Ptr);
+	if (m_twoPlayer)
+	{
+		Player* p2Ptr = new Player(Vec2{ 160.0f, 96.0f }, &m_map, &m_input, &m_world, m_heroDefs[(m_selectedHero + 1) % kHeroCount], kP2Keys);
+		m_player2 = p2Ptr;
+		m_world.add(p2Ptr);
+	}
+
+	m_world.add(new Turret(Vec2{ 300.0f,300.0f }, Vec2{ 32.0f, 32.0f }, m_tm.get("trap_turret"), 60, &m_map, &m_world, &m_enemyShotDef, 1.5, 160000, p1Ptr->getId()));
 	
-	return playerPtr;
+	return p1Ptr;
 };
 
 void Game::drawCentered(const std::string& s, int y)
@@ -314,7 +323,7 @@ void Game::drawHud()
 	int remaining = static_cast<int>(kLevelDuration - m_elapsed);
 	m_font.drawText(m_renderer, "Time: " + std::to_string(remaining), m_camera.getScreenWidth() - m_font.measureText("Time: 1000") - 10, 40);
 
-	//draw Hp bar
+	//draw Hp/Mana bar
 	m_font.drawText(m_renderer, "^", 10, 10);
 	drawBar(m_font.measureText("^") + 20, 20, 200, 30, m_player->getHp(), m_player->getMaxHp(), 244, 128, 128);
 	m_renderer.drawImage(*m_tm.get("potion_mp") ,10, 65);
@@ -323,6 +332,18 @@ void Game::drawHud()
 	//draw Score and Kills
 	drawCentered("Score: " + std::to_string(m_world.getScore()), 15);
 	drawCentered("Kills: " + std::to_string(m_world.getKills()), 45);
+
+	//draw p2 hud
+	if (m_player2) 
+	{
+
+		//draw p2 Hp/Mana bar
+		int startX = m_camera.getScreenWidth() - 400;
+		m_font.drawText(m_renderer, "^", startX, 80);
+		drawBar(startX + m_font.measureText("^") + 20, 80, 200, 30, m_player2->getHp(), m_player2->getMaxHp(), 244, 128, 128);
+		m_renderer.drawImage(*m_tm.get("potion_mp"), startX, 125);
+		drawBar(startX + m_font.measureText("^") + 20, 118, 200, 30, m_player2->getMana(), m_player2->getMaxMana(), 70, 130, 230);
+	}
 }
 
 //init the game:read from files, create window, refresh camera, load tex, create entities' defs
@@ -364,7 +385,9 @@ void Game::updateMenu()
 	int startY = 300;
 	int lineH = 60;
 	drawCentered("select your hero:", 200);
-	drawCentered("W/S: select   A/D: level   Enter: start   H: help   Esc: quit", 600);
+	drawCentered("W/S: select   A/D: level   Enter: start", 600);
+	drawCentered("T:Players   H: help   Esc: quit", 650);
+	drawCentered("Please read help before you play", 700);
 
 	for (int i = 0;i < kHeroCount;i++) {
 		int y = startY + i * lineH;
@@ -376,6 +399,7 @@ void Game::updateMenu()
 	}
 
 	drawCentered(std::string("Level: < ") + levelNames[m_selectedLevel] + " >", startY + kHeroCount * lineH + 30);
+	drawCentered(std::string("Player: < ") + std::to_string(m_twoPlayer ? 2 : 1) + " >", startY + kHeroCount * lineH + 60);
 
 	if (m_input.wasPressed('S'))
 		m_selectedHero = (m_selectedHero + 1) % kHeroCount;
@@ -391,6 +415,11 @@ void Game::updateMenu()
 
 	if (m_input.wasPressed('H'))
 		m_state = GameState::Help;
+
+	if (m_input.wasPressed('T')) 
+	{
+		m_twoPlayer = (!m_twoPlayer);
+	}
 
 	if (m_input.wasPressed(VK_RETURN))
 	{
@@ -453,7 +482,20 @@ void Game::updatePlay(float dt)
 	m_world.update(dt);
 
 	//camera follow and calculate screenCoordinate
-	m_camera.follow(m_player->getCenter());
+	Vec2 focus{};
+	if (m_player != nullptr && m_player2 != nullptr && !m_player->isDead() && !m_player2->isDead())
+	{
+		focus = (m_player->getCenter() + m_player2->getCenter()) * 0.5f;
+	}
+	else if (m_player2 && !m_player2->isDead()&&m_player->isDead())
+	{
+		focus = m_player2->getCenter();
+	}
+	else
+	{
+		focus = m_player->getCenter();
+	}
+	m_camera.follow(focus);
 
 	//draw map
 	m_map.draw(m_renderer, m_camera);
@@ -473,7 +515,9 @@ void Game::updatePlay(float dt)
 	drawHud();
 
 	//win judgement
-	if (m_player->isDead())
+	bool p1Dead = m_player->isDead();
+	bool p2Dead = (m_player2 == nullptr) || m_player2->isDead();
+	if (p1Dead && p2Dead)
 	{
 		m_won = false;
 		m_state = GameState::Tally;
@@ -579,6 +623,12 @@ void Game::writeEntity(std::ostream& out, const Entity& e) const
 
 bool Game::saveGame(const std::string& path) const
 {
+	if (m_twoPlayer)
+	{
+		std::cerr << "Save disabled in 2P";
+		return false;
+	}
+
 	std::ofstream out{ path };
 	if (!out)
 	{
@@ -611,6 +661,8 @@ bool Game::saveGame(const std::string& path) const
 
 bool Game::loadGame(const std::string& path)
 {
+	m_player2 = nullptr;
+	m_twoPlayer = false;
 	std::ifstream in{ path };
 	if (!in)
 	{
@@ -659,7 +711,7 @@ bool Game::loadGame(const std::string& path)
 		{
 		case EntityType::Player:
 		{
-			m_player = new Player{ Vec2{}, &m_map, &m_input, &m_world, m_heroDefs[hero] };
+			m_player = new Player{ Vec2{}, &m_map, &m_input, &m_world, m_heroDefs[hero], kP1Keys };
 			e = m_player;
 			break;
 		}
@@ -671,7 +723,7 @@ bool Game::loadGame(const std::string& path)
 			{
 				break;
 			}
-			e = new Enemy{ Vec2{}, &m_map, m_player, m_enemyDefs[defIndex] };
+			e = new Enemy{ Vec2{}, &m_map, &m_world, m_enemyDefs[defIndex] };
 			break;
 		}
 		case EntityType::Spawner:

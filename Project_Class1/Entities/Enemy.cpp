@@ -3,20 +3,25 @@
 
 void Enemy::onUpdate(float dt)
 {
+	Character* target = m_world->nearestPlayer(getCenter());
+	if (target == nullptr)
+	{
+		return;
+	}
 	if (isDead()) 
 	{
 		destroy();
 		return;
 	}
-	Vec2 unit{ m_target->getCenter() - getCenter() };
+	Vec2 unit{ target->getCenter() - getCenter() };
 	unit.normalize();
 
 	Vec2 delta = unit * dt * m_speed;//calculate the delta
 	moveWithCollision(delta);
 
-	if (getBounds().intersects(m_target->getBounds())) 
+	if (getBounds().intersects(target->getBounds())) 
 	{
-		m_target->takeDamage(m_contactDamage);
+		target->takeDamage(m_contactDamage);
 	}
 }
 

@@ -11,6 +11,8 @@ Projectile* Player::spawnProjectile(const ProjectileDef& def) const
 
 void Player::onUpdate(float dt)
 {
+	if (isDead()) return;
+
 	//in-built timer change
 	m_meleeTimer = std::max(0.0f, m_meleeTimer - dt);
 	m_shootTimer = std::max(0.0f, m_shootTimer - dt);
@@ -29,16 +31,16 @@ void Player::onUpdate(float dt)
 
 	//move
 	Vec2 unit{ 0.0f,0.0f };
-	if (m_input->isDown('W'))
+	if (m_input->isDown(m_bind->up))
 		unit += Vec2{ 0.0f,-1.0f };
 		
-	if (m_input->isDown('A'))
+	if (m_input->isDown(m_bind->left))
 		unit += Vec2{ -1.0f,0.0f };
 		
-	if (m_input->isDown('S'))
+	if (m_input->isDown(m_bind->down))
 		unit += Vec2{ 0.0f,1.0f };
 		
-	if (m_input->isDown('D'))
+	if (m_input->isDown(m_bind->right))
 		unit += Vec2{ 1.0f,0.0f };
 	
 	if (unit.length() >= 0.0001f)
@@ -53,7 +55,7 @@ void Player::onUpdate(float dt)
 	}
 
 	//attack
-	if (m_input->wasPressed('J')&& m_meleeTimer <= 0.0f)
+	if (m_input->wasPressed(m_bind->melee)&& m_meleeTimer <= 0.0f)
 	{
 		Vec2 cPoint{ getCenter()};
 		cPoint += Vec2{ m_facing.x * (m_def->meleeBox.x + m_hitboxSize.x) / 2 ,m_facing.y * (m_def->meleeBox.y + m_hitboxSize.y) / 2 };
@@ -64,7 +66,7 @@ void Player::onUpdate(float dt)
 	}
 
 	//shoot
-	if (m_input->wasPressed('K')&& m_shootTimer <= 0.0f)
+	if (m_input->wasPressed(m_bind->shoot)&& m_shootTimer <= 0.0f)
 	{
 		assert(m_def->shot != nullptr);
 		m_world->add(spawnProjectile(*m_def->shot));
@@ -72,7 +74,7 @@ void Player::onUpdate(float dt)
 	}
 
 	//magic
-	if (m_input->wasPressed('L')&& m_skillTimer <= 0.0f && m_mana >= m_def->skillManaCost)
+	if (m_input->wasPressed(m_bind->skill)&& m_skillTimer <= 0.0f && m_mana >= m_def->skillManaCost)
 	{
 		bool cast = false;
 		switch (m_def->skill) 

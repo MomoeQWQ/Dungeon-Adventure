@@ -1,19 +1,20 @@
 #pragma once
 #include "Character.h"
 #include "EnemyDef.h"
+#include "../Game/World.h"
 
 class Enemy : public Character
 {
 public:
-	Enemy(Vec2 pos, const Tilemap* map, Character* target, const EnemyDef& def)
+	Enemy(Vec2 pos, const Tilemap* map, World* world, const EnemyDef& def)
 		:Character(pos, def.size, def.tex, def.maxHp, map)
-		, m_target{ target }
+		, m_world{ world }
 		, m_speed{ def.speed }
 		, m_contactDamage{ def.contactDamage }
 		, m_score{ def.score }
 		, m_defIndex{def.index}
 	{
-		assert(m_target != nullptr && "nullptr target cannot be accepted to create an Enemy!");
+		assert(m_world != nullptr && "nullptr world cannot be accepted to create an Enemy!");
 		m_hitboxOffset = def.hitboxOffset;
 		m_hitboxSize = def.hitboxSize;
 		m_team = Team::Enemy;
@@ -27,7 +28,7 @@ public:
 	void saveKey(std::ostream& out) const override;
 
 private:
-	Character* m_target{};
+	World* m_world{};
 	float m_speed{};
 	int m_contactDamage{};
 	int m_score{};
