@@ -7,6 +7,8 @@
 #include <cassert>
 #include <fstream>
 #include <iomanip>
+#include <cstdlib>
+#include <chrono>
 
 namespace 
 { 
@@ -128,7 +130,7 @@ void Game::setupDefs()
 		.size{ 12.0f,12.0f },
 		.tex{ m_tm.get("bullet") },
 		.speed{ 600.0f },
-		.damage{ 12 },
+		.damage{ 9999 },//for testing, ranger's bullet is one-hit-kill
 		.lifetime{ 1.2f }
 	};
 
@@ -329,9 +331,17 @@ void Game::drawHud()
 	m_renderer.drawImage(*m_tm.get("potion_mp") ,10, 65);
 	drawBar(m_font.measureText("^") + 20, 58, 200, 30, m_player->getMana(), m_player->getMaxMana(), 70, 130, 230);
 
-	//draw Score and Kills
+	//draw Score and Kills and using Grid
 	drawCentered("Score: " + std::to_string(m_world.getScore()), 15);
 	drawCentered("Kills: " + std::to_string(m_world.getKills()), 45);
+	drawCentered(m_world.isUsingGrid() ? "Grid: ON" : "Grid: OFF",75);
+	drawCentered("Entities: " + std::to_string(m_world.getCount()), 105);
+	drawCentered("Update: " + std::to_string(m_updateMs) + " ms", 135);
+	if (m_godMode)
+	{
+		drawCentered("God Mode", 165);
+	}
+
 
 	//draw p2 hud
 	if (m_player2) 
@@ -478,8 +488,45 @@ void Game::updatePlay(float dt)
 		loadGame("save.txt");
 	}
 
-	//movement of player
+	//for debugging
+	
+	//grid 
+	if (m_input.wasPressed('B'))
+	{
+		m_world.toggleGrid();
+	}
+
+	//generate 100 enemies
+	if (m_input.wasPressed('P'))
+	{
+		for (int i = 0;i < 100;i++) 
+		{
+			float dx = m_camera.getPosition().x;
+			float dy = m_camera.getPosition().y;
+			dx += static_cast<float>(rand() % 1200) - 600.0f;
+			dy += static_cast<float>(rand() % 1200) - 600.0f;
+			m_world.add(new Enemy(Vec2{ dx,dy }, &m_map, &m_world, m_enemyDefs[i % 3]));
+		}
+	}
+
+	//god mode
+	if (m_input.wasPressed('G'))
+	{
+		m_godMode = !m_godMode;
+	}
+
+	if (m_godMode) 
+	{
+		m_player->heal(9999);
+	}
+
+	//time record, update world
+	auto t0 = std::chrono::high_resolution_clock::now();
 	m_world.update(dt);
+	auto t1 = std::chrono::high_resolution_clock::now();
+	float ms = std::chrono::duration<float, std::milli>(t1 - t0).count();
+	m_updateMs = m_updateMs * 0.95f + ms * 0.05f;//Smoothing
+
 
 	//camera follow and calculate screenCoordinate
 	Vec2 focus{};

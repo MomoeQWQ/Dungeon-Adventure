@@ -34,5 +34,8 @@ private:
 	int m_score{};
 	int m_defIndex{};
 
+	static constexpr float kSeparationRadius = 40.0f;
+	static constexpr float kSeparationStrength = 120.0f;
+
 	void onUpdate(float dt) override;
 };

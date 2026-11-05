@@ -34,11 +34,29 @@ public:
 	//for P2
 	Character* nearestPlayer(Vec2 from) const;
 
+	//for Broadphase
+	int queryArea(const Rect& area, Entity** out, int maxOut) const;  
+	void toggleGrid();
+	bool isUsingGrid() const;
+
 private:
+	static constexpr int kMaxQuery = 256;
+	static constexpr float kCellSize = 128.0f;
+	static constexpr int kGridW = 64;
+	static constexpr int kGridH = 64;
+	static constexpr int kMaxPlayers = 2;
+
 	DynamicArray<Entity*> m_entities{};
+	DynamicArray<Entity*> m_cells[kGridW * kGridH];
+	bool m_useGrid{ true };
+	mutable int m_queryStamp{ 0 };
 	int m_nextId{ 0 };
 	int m_score{ 0 };
 	int m_kills{ 0 };
+	Character* m_players[kMaxPlayers]{};
+	int m_playerCount{ 0 };
 	
 	void removeDead();//World determines when to remove
+	static int cellIndex(int cx, int cy);
+	void rebuildGrid();
 };

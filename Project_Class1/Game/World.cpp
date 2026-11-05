@@ -4,6 +4,7 @@
 #include "../Entities/Character.h"
 #include <cassert>
 #include <algorithm>
+#include <cmath>
 
 constexpr int MaxtopN = 8;
 
@@ -21,6 +22,7 @@ void World::add(Entity* e)
 
 void World::update(float dt) 
 {
+	rebuildGrid();
 	for (int i = 0;i < m_entities.getSize();i++)
 	{
 		m_entities[i]->update(dt);
@@ -63,12 +65,14 @@ void World::removeDead()
 
 bool World::damageArea(const Rect& area, int damage, Team attacker)
 {
+	Entity* hits[kMaxQuery]{};
+	int size = queryArea(area, hits, kMaxQuery);
 	bool hitOne{ false };
-	for (int i = 0;i < m_entities.getSize();i++) 
+	for (int i = 0;i < size;i++) 
 	{
-		if (m_entities[i]->getTeam() != Team::Neutral && m_entities[i]->getTeam() != attacker && m_entities[i]->getBounds().intersects(area)) 
+		if (hits[i]->getTeam() != Team::Neutral && hits[i]->getTeam() != attacker && hits[i]->getBounds().intersects(area))
 		{
-			m_entities[i]->onHit(damage);
+			hits[i]->onHit(damage);
 			hitOne = true;
 		}
 	}
@@ -144,10 +148,17 @@ int World::selectHighestHp(Vec2 center, float range, Team attacker, int* outIds,
 
 void World::clear() 
 {
+	//clear all entities,cells and reset score/kills
+	m_playerCount = 0;
+
 	for (int i = 0;i < m_entities.getSize();i++) 
 	{
 		delete m_entities[i];//Class World is in charge of memory
 		m_entities[i] = nullptr;//for safety
+	}
+	for (int i = 0;i < kGridW * kGridH;i++)
+	{
+		m_cells[i].clear();
 	}
 	m_entities.clear();
 	m_score = 0;
@@ -189,11 +200,8 @@ Character* World::nearestPlayer(Vec2 from) const
 {
 	Character* best = nullptr;
 	float bestD2 = 1e30f;
-	for (int i = 0; i < m_entities.getSize(); i++) {
-		Entity* e = m_entities[i];
-		if (e->getType() != EntityType::Player)
-			continue;
-		Character* c = static_cast<Character*>(e);
+	for (int i = 0; i < m_playerCount; i++) {
+		Character* c = m_players[i];
 		if (c->isDead())
 			continue;
 		Vec2 d = c->getCenter() - from;
@@ -205,4 +213,110 @@ Character* World::nearestPlayer(Vec2 from) const
 		}
 	}
 	return best;
+}
+
+int World::queryArea(const Rect& area, Entity** out, int maxOut) const 
+{
+	//Brute - Force Version
+	if (!m_useGrid)
+	{
+		int count = 0;
+		for (int i = 0; i < m_entities.getSize(); i++) {
+			Entity* e = m_entities[i];
+			if (e->isAlive() && e->getBounds().intersects(area))
+			{
+				out[count++] = e;
+			}
+			if (count == maxOut)
+			{
+				break;
+			}
+		}
+		return count;
+	}
+
+	// cell-based Broadphase Version
+	else 
+	{
+		m_queryStamp++;
+		int count = 0;
+		int leftCell = static_cast<int>(std::floor(area.x / kCellSize));
+		int rightCell = static_cast<int>(std::floor((area.x + area.w) / kCellSize));
+		int topCell = static_cast<int>(std::floor(area.y / kCellSize));
+		int bottomCell = static_cast<int>(std::floor((area.y + area.h) / kCellSize));
+		for (int cy = topCell;cy <= bottomCell;cy++)
+		{
+			for (int cx = leftCell;cx <= rightCell;cx++)
+			{
+				const DynamicArray<Entity*>& bucket = m_cells[cellIndex(cx, cy)];
+				for (int i = 0;i < bucket.getSize();i++)
+				{
+					Entity* e = bucket[i];
+					if (e->m_lastQuery == m_queryStamp)
+						continue;
+					e->m_lastQuery = m_queryStamp;
+					if (e->isAlive() && e->getBounds().intersects(area))
+					{
+						out[count++] = e;
+					}
+					if (count == maxOut)
+					{
+						return count;
+					}
+				}
+			}
+		}
+		return count;
+	}
+
+}
+
+void World::toggleGrid()
+{
+	m_useGrid = !m_useGrid;
+}
+
+bool World::isUsingGrid() const
+{
+	return m_useGrid;
+}
+
+int World::cellIndex(int cx, int cy)
+{
+	cx = ((cx % kGridW) + kGridW) % kGridW;
+	cy = ((cy % kGridH) + kGridH) % kGridH;
+	return cy * kGridW + cx;
+}
+
+void World::rebuildGrid() 
+{
+	m_playerCount = 0;
+	for (int i = 0;i < kGridW * kGridH;i++)
+	{
+		m_cells[i].clear();
+	}
+	for (int i = 0;i < m_entities.getSize();i++)
+	{
+		Entity* e = m_entities[i];
+		if (e->getType() == EntityType::Player && m_playerCount < kMaxPlayers)
+		{
+			m_players[m_playerCount++] = static_cast<Character*>(e);
+		}
+		
+		if (!e->isAlive())
+			continue;
+		Rect bounds = e->getBounds();
+		int leftCell = static_cast<int>(std::floor(bounds.x / kCellSize));
+		int rightCell = static_cast<int>(std::floor((bounds.x + bounds.w) / kCellSize));
+		int topCell = static_cast<int>(std::floor(bounds.y / kCellSize));
+		int bottomCell = static_cast<int>(std::floor((bounds.y + bounds.h) / kCellSize));
+		for (int cy = topCell;cy <= bottomCell;cy++)
+		{
+			for (int cx = leftCell;cx <= rightCell;cx++)
+			{
+				int index = cellIndex(cx, cy);
+				m_cells[index].push_back(e);
+			}
+		}
+	}
 }

@@ -55,6 +55,9 @@ public:
 
 	virtual void load(std::istream& in);
 
+	//for Broadphase, avoid using the same entity in one query
+	friend class World;
+
 protected:
 	Entity(Vec2 pos, Vec2 size, const GamesEngineeringBase::Image* tex)
 		:m_position{ pos }
@@ -74,4 +77,7 @@ protected:
 	int m_srcX{0};
 	int m_srcY{0};
 	Team m_team{ Team::Neutral };
+
+private:
+	mutable int m_lastQuery{ -1 };
 };

@@ -31,7 +31,7 @@ public:
 	void run();
 
 private:
-	static constexpr float kLevelDuration = 120.0f;
+	static constexpr float kLevelDuration = 1200.0f;
 	static constexpr int kHeroCount = 3;
 	static constexpr int kScreenW = 1024;//default to init camera,and we'll update it when loading map file
 	static constexpr int kScreenH = 768;;
@@ -44,7 +44,7 @@ private:
 	GamesEngineeringBase::Window m_canvas;
 	GamesEngineeringBase::Timer m_timer;
 	Input m_input{};
-	Renderer m_renderer{m_canvas};
+	Renderer m_renderer{ m_canvas };
 	FpsCounter m_fps{};
 
 	TextureManager m_tm{};
@@ -57,9 +57,9 @@ private:
 	//since now we haven't init the map, use k-numbers to init camera
 	Camera m_camera{ kScreenW, kScreenH, static_cast<int>(m_canvas.getWidth()), static_cast<int>(m_canvas.getHeight()) };
 
-	EnemyDef m_enemyDefs[3]; 
-	ProjectileDef m_shotDefs[3]; 
-	ProjectileDef m_magicDef; 
+	EnemyDef m_enemyDefs[3];
+	ProjectileDef m_shotDefs[3];
+	ProjectileDef m_magicDef;
 	HeroDef m_heroDefs[kHeroCount];
 	ProjectileDef m_enemyShotDef{};
 
@@ -70,10 +70,12 @@ private:
 	GameState m_state{ GameState::Intro };
 	int m_selectedHero{ 0 };
 	int m_selectedLevel{ 0 };
-	bool m_running{true};
+	bool m_running{ true };
 	bool m_won{ false };
 	float m_elapsed{ 0.0f };
 	Player* m_player{ nullptr };
+	bool m_godMode{ false };
+	float m_updateMs{ 0.0f };
 
 	//multiple players
 	Player* m_player2{ nullptr };
