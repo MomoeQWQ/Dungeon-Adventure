@@ -32,7 +32,7 @@ public:
 	void run();
 
 private:
-	static constexpr float kLevelDuration = 1200.0f;
+	static constexpr float kLevelDuration = 120.0f;
 	static constexpr int kHeroCount = 3;
 	static constexpr int kScreenW = 1024;//default to init camera,and we'll update it when loading map file
 	static constexpr int kScreenH = 768;;
